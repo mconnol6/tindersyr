@@ -1,4 +1,5 @@
-from flask import Flask, request, render_template, make_response, redirect, url_for
+from flask import Flask, request, render_template, make_response, redirect, url_for, session
+#from flask_login.login_manager import LoginManager
 from flask_restful import Resource, Api, reqparse
 from flask.ext.mysql import MySQL
 
@@ -8,10 +9,13 @@ api = Api(app)
 #login_manager = LoginManager()
 
 app.config['MYSQL_DATABASE_USER'] = 'mconnol6'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'ughNewpw:/'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'grouppw'
 app.config['MYSQL_DATABASE_DB'] = 'mconnol6'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 app.config['MYSQL_DATABASE_PORT'] = 3306
+app.config['SECRET_KEY'] = 'this should be changed'
+
+mysql.init_app(app)
 
 #class User():
 #
@@ -26,7 +30,6 @@ app.config['MYSQL_DATABASE_PORT'] = 3306
 #        return self.netid
 
 
-mysql.init_app(app)
 #login_manager.init_app(app)
 
 #@login_manager.user_loader
@@ -34,25 +37,25 @@ mysql.init_app(app)
 #    u = User(user_id)
 #    return u
 
-class AddOrg(Resource):
-    def post(self):
-        try:
-            parser = reqparse.RequestParser()
-            parser.add_argument('name', type=str)
-            args = parser.parse_args()
-
-            n_name = args['name']
-
-            conn = mysql.connect()
-            cursor = conn.cursor()
-            cursor.callproc('AddOrg', (n_name,))
-            data = cursor.fetchall()
-
-            conn.commit()
-            return {'StatusCode' : '200', 'Message' : 'Success'}
-
-        except Exception as e:
-            return {'error' : str(e)}
+#class AddOrg(Resource):
+#    def post(self):
+#        try:
+#            parser = reqparse.RequestParser()
+#            parser.add_argument('name', type=str)
+#            args = parser.parse_args()
+#
+#            n_name = args['name']
+#
+#            conn = mysql.connect()
+#            cursor = conn.cursor()
+#            cursor.callproc('AddOrg', (n_name,))
+#            data = cursor.fetchall()
+#
+#            conn.commit()
+#            return {'StatusCode' : '200', 'Message' : 'Success'}
+#
+#        except Exception as e:
+#            return {'error' : str(e)}
 
 class signup(Resource):
     def get(self):
@@ -86,20 +89,24 @@ class signup(Resource):
             cursor.callproc('AddUser', (n_netid, n_name, n_year, n_bio, n_hometown, n_gender, n_interested_in, n_number, 0))
             data = cursor.fetchall()
 
+            print data
+
             conn.commit()
-            return {'StatusCode' : '200', 'Message' : 'Success'}
+            #return {'StatusCode' : '200', 'Message' : 'Success'}
+            return redirect(url_for('index'))
 
         except Exception as e:
             return {'error' : str(e)}
 
 class index(Resource):
     def get(self):
-        return "hello " 
+        headers = {'Content-Type': 'text/html'}
+        return make_response(render_template('hello.html', name=session['username']),200,headers)
 
-class signin(Resource):
+class login(Resource):
     def get(self):
         headers = {'Content-Type': 'text/html'}
-        return make_response(render_template('signin.html'),200,headers)
+        return make_response(render_template('login.html'),200,headers)
 
     def post(self):
         try:
@@ -115,23 +122,27 @@ class signin(Resource):
             data = cursor.fetchall()
 
             if len(data) != 0:
-                #u = User(netid)
-                #login_user(u)
+                session['username'] = netid
                 return redirect(url_for('index'))
 
             else:
                 headers = {'Content-Type': 'text/html'}
-                return make_response(render_template('signin.html'),200,headers)
+                return redirect(url_for('login'))
 
         except Exception as e:
             return {'error': str(e)}
 
+class logout(Resource):
+    def get(self):
+        session.pop('username', None)
+        return redirect(url_for('login'))
 
-api.add_resource(index, '/index')
+
 api.add_resource(signup, '/signup')
-api.add_resource(signin, '/signin')
-
-api.add_resource(AddOrg, '/AddOrg')
+api.add_resource(login, '/login')
+api.add_resource(index, '/index')
+api.add_resource(logout, '/logout')
+#api.add_resource(AddOrg, '/AddOrg')
 
 if __name__ == '__main__':
     app.run()
