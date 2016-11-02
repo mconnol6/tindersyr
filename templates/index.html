@@ -1,0 +1,6 @@
+hello {{ name }} 
+<br/>
+<a href="{{ url_for('edit_user') }}">Edit Profile</a>
+<form method="POST" action="{{ url_for('logout') }}">
+    <input value="Logout" type="submit"/>
+</form>

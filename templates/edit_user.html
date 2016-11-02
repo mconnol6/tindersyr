@@ -3,23 +3,22 @@
     <head>
     </head>
     <body>
-        <form method="post" action="{{ url_for('signup') }}">
-            <label for="netid">Netid:</label>
-            <input type="text" name="netid"/><br/>
+        <h3>Edit user: {{ netid }} </h3>
+        <form method="post" action="{{ url_for('edit_user') }}">
             <label for="name">Name:</label>
-            <input type="text" name="name"/><br/>
+            <input type="text" name="name" value="{{ name }}"/><br/>
             <label for="year">Year:</label>
-            <input type="text" name="year"/><br/>
+            <input type="text" name="year" value="{{ year }}"/><br/>
             <label for="bio">Bio:</label>
-            <textarea rows=10 name="bio"></textarea><br/>
+            <textarea rows=10 name="bio" >{{ bio }}</textarea><br/>
             <label for="hometown">Hometown:</label>
-            <input type="text" name="hometown"/><br/>
+            <input type="text" name="hometown" value="{{ hometown }}"/><br/>
             <label for="gender">Gender:</label>
-            <input type="text" name="gender"/><br/>
+            <input type="text" name="gender" value="{{ gender }}"/><br/>
             <label for="interested_in">Interested in:</label>
-            <input type="text" name="interested_in"/><br/>
+            <input type="text" name="interested_in" value="{{ interested_in }}"/><br/>
             <label for="number">Number:</label>
-            <input type="text" name="number"/><br/>
+            <input type="text" name="number" value="{{ number }}"/><br/>
             <input type="submit" value="Submit"/>
         </form>
     </body>
