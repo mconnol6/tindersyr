@@ -1,0 +1,3 @@
+create procedure UpdateUser(in id varchar(10), in n varchar(100), in yr int, in b varchar(500), in h varchar(100), in g varchar(20), in i varchar(20), in num varchar(20)) begin update users set name=n, year=yr, bio=b, hometown=h, gender=g, interested_in=i, number=num where netid=id limit 1; end//
+
+create procedure DeleteUser(in id varchar(10)) begin delete from users where netid=id limit 1; end//

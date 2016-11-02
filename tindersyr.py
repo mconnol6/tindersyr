@@ -179,6 +179,7 @@ class login(Resource):
             cursor = conn.cursor()
             cursor.callproc('GetUser', (netid,))
             data = cursor.fetchall()
+            conn.commit()
 
             if len(data) != 0:
                 session['username'] = netid
@@ -190,6 +191,17 @@ class login(Resource):
 
         except Exception as e:
             return {'error': str(e)}
+
+class delete_account(Resource):
+    def post(self):
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        cursor.callproc('DeleteUser', (session['username'],))
+        data = cursor.fetchall()
+        conn.commit()
+        session.pop('username', None)
+        return redirect(url_for('login'))
+
 
 class logout(Resource):
     def post(self):
@@ -206,6 +218,7 @@ api.add_resource(login, '/login')
 api.add_resource(index, '/index')
 api.add_resource(logout, '/logout')
 api.add_resource(edit_user, '/edit_user')
+api.add_resource(delete_account, '/delete_account')
 #api.add_resource(AddOrg, '/AddOrg')
 
 if __name__ == '__main__':
