@@ -1,3 +1,63 @@
 create procedure UpdateUser(in id varchar(10), in n varchar(100), in yr int, in b varchar(500), in h varchar(100), in g varchar(20), in i varchar(20), in num varchar(20)) begin update users set name=n, year=yr, bio=b, hometown=h, gender=g, interested_in=i, number=num where netid=id limit 1; end//
 
 create procedure DeleteUser(in id varchar(10)) begin delete from users where netid=id limit 1; end//
+
+create procedure CreateSetup(
+    in e varchar(100),
+    in su varchar(10),
+    in a varchar(10),
+    m bool
+)
+begin
+insert into setup (
+    event_name,
+    setter_upper,
+    attendee,
+    member
+)
+values (
+    e,
+    su,
+    a,
+    m
+);
+end//
+
+create table setup (
+    event_name varchar(100) not null,
+    setter_upper varchar(10) not null,
+    attendee varchar(10) not null,
+    status varchar(100),
+    member bool not null,
+    primary key(event_name, setter_upper, attendee),
+    foreign key(event_name)
+        references event(name),
+    foreign key(setter_upper)
+        references users(netid),
+    foreign key(attendee)
+        references users(netid)
+);
+
+create table potential_matches(
+    mem_setter_upper varchar(10) not null,
+    nonmem_setter_upper varchar(10) not null,
+    mem_attendee varchar(10) not null,
+    nonmem_attendee varchar(10) not null,
+    event_name varchar(100) not null,
+    member_status varchar(100),
+    nonmember_status varchar(100),
+    primary key(mem_setter_upper, nonmem_setter_upper, mem_attendee, nonmem_attendee, event_name),
+    foreign key(mem_setter_upper)
+        references users(netid),
+    foreign key(nonmem_setter_upper)
+        references users(netid),
+    foreign key(mem_attendee)
+        references users(netid),
+    foreign key(nonmem_attendee)
+        references users(netid),
+    foreign key(event_name)
+        references event(name)
+);
+
+//example of inserting into event table
+insert into event(name, date, time, location, org_name) values ("Pasquerilla East Formal", str_to_date('11,5,2016', '%m,%d,%Y'), maketime(22,0,0), "Jordan Hall of Science", "Pasquerilla East Hall");

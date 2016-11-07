@@ -209,6 +209,51 @@ class logout(Resource):
             session.pop('username', None)
         return redirect(url_for('login'))
 
+class create_setup(Resource):
+    def get(self):
+        if 'username' not in session:
+            return redirect(url_for('login'))
+
+        headers = {'Content-Type': 'text/html'}
+        return make_response(render_template('create_setup.html'),200,headers)
+
+    def post(self):
+        if 'username' not in session:
+            return redirect(url_for('login'))
+
+        parser = reqparse.RequestParser()
+        parser.add_argument('attendee_netid', type=str)
+        parser.add_argument('member', type=str)
+        parser.add_argument('event', type=str)
+        args = parser.parse_args()
+
+        setter_upper_netid = session['username']
+        attendee_netid = args['attendee_netid']
+        event_name = args['event']
+        if args['member'] == "yes":
+            member = 1
+        else:
+            member = 0
+
+        conn = mysql.connect()
+        cursor = conn.cursor()
+
+        print event_name 
+        print setter_upper_netid
+        print attendee_netid
+        print member
+
+        cursor.callproc('CreateSetup', (event_name, setter_upper_netid, attendee_netid, member))
+        data = cursor.fetchall()
+
+        print data[0]
+
+        conn.commit()
+
+        return redirect(url_for('index'))
+
+
+
 @app.route('/')
 def goto_index():
     return redirect(url_for('index'))
@@ -219,6 +264,7 @@ api.add_resource(index, '/index')
 api.add_resource(logout, '/logout')
 api.add_resource(edit_user, '/edit_user')
 api.add_resource(delete_account, '/delete_account')
+api.add_resource(create_setup, '/create_setup')
 #api.add_resource(AddOrg, '/AddOrg')
 
 if __name__ == '__main__':

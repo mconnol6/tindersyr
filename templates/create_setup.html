@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    </head>
+    <body>
+        <form method="post" action="{{ url_for('create_setup') }}">
+            <label for="attendee_netid">Your friend's netid:</label>
+            <input type="text" name="attendee_netid"/><br/>
+
+
+            <label for="event">Event</label>
+            <input type="text" name="event"/><br/>
+
+            <input type="radio" name="member" value="yes" checked>Member<br>
+            <input type="radio" name="member" value="no">Non-member<br>
+
+            <input type="submit" value="Submit">
+        </form>
+    </body>
+</html>
