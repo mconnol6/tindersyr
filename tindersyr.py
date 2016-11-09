@@ -1,12 +1,19 @@
 from flask import Flask, request, render_template, make_response, redirect, url_for, session
-#from flask_login.login_manager import LoginManager
 from flask_restful import Resource, Api, reqparse
 from flask.ext.mysql import MySQL
+
+class Setup:
+
+    def __init__(self, event_name, setter_upper, attendee, status, member):
+        self.event_name = event_name
+        self.setter_upper = setter_upper
+        self.attendee = attendee
+        self.status = status
+        self.member = member
 
 mysql = MySQL()
 app = Flask(__name__)
 api = Api(app)
-#login_manager = LoginManager()
 
 app.config['MYSQL_DATABASE_USER'] = 'mconnol6'
 app.config['MYSQL_DATABASE_PASSWORD'] = 'grouppw'
@@ -159,8 +166,19 @@ class index(Resource):
     def get(self):
         if 'username' not in session:
             return redirect(url_for('login'))
+
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        cursor.callproc('GetSetups', (session['username'],))
+        data = cursor.fetchall()
+
+        setups = []
+        for s in data:
+            setup = Setup(s[0], session['username'], s[1], "", s[2])
+            setups.append(setup)
+
         headers = {'Content-Type': 'text/html'}
-        return make_response(render_template('index.html', name=session['username']),200,headers)
+        return make_response(render_template('index.html', name=session['username'], setups=setups),200,headers)
 
 class login(Resource):
     def get(self):
@@ -237,17 +255,7 @@ class create_setup(Resource):
 
         conn = mysql.connect()
         cursor = conn.cursor()
-
-        print event_name 
-        print setter_upper_netid
-        print attendee_netid
-        print member
-
         cursor.callproc('CreateSetup', (event_name, setter_upper_netid, attendee_netid, member))
-        data = cursor.fetchall()
-
-        print data[0]
-
         conn.commit()
 
         return redirect(url_for('index'))

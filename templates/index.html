@@ -5,5 +5,14 @@ hello {{ name }}
     <input value="Logout" type="submit"/>
 </form>
 <form method="POST" action="{{ url_for('delete_account') }}">
-    <input value="Delete Accout" type="submit"/>
+    <input value="Delete Account" type="submit"/>
 </form>
+
+Your setups:
+<br/>
+{% for s in setups %}
+    {{ s.attendee }}
+    <br/>
+    {{ s.event_name }}
+    <br/>
+{% endfor %}

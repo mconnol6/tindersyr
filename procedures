@@ -2,6 +2,50 @@ create procedure UpdateUser(in id varchar(10), in n varchar(100), in yr int, in 
 
 create procedure DeleteUser(in id varchar(10)) begin delete from users where netid=id limit 1; end//
 
+create procedure GetSetups(
+    in n varchar(10)
+)
+begin
+select event_name, attendee, member from setup
+where setup.setter_upper = n;
+end//
+
+create procedure GetPotentialMatchList(
+    in e varchar(100),
+    in su varchar(10),
+    in a varchar(10)
+)
+begin
+    declare mem bool default 0;
+    declare ii varchar(20) default "Both";
+
+    select member from setup where
+        su = setter_upper
+        and a = attendee
+        and e = event_name
+    limit 1
+    into mem;
+
+    select interested_in from users where
+        a = netid
+    limit 1
+    into ii;
+
+    select s.setter_upper, s.attendee from setup as s, users as u where
+        s.attendee = u.netid
+        and s.member = ! mem
+        and u.gender = ii
+        and (s.setter_upper, su, s.attendee, a, e)
+        not in
+        ( select 
+            p.mem_setter_upper, 
+            p.nonmem_setter_upper, 
+            p.mem_attendee, p.nonmem_attendee, 
+            p.event_name 
+        from potential_matches as p );
+end//
+    
+
 create procedure CreateSetup(
     in e varchar(100),
     in su varchar(10),
