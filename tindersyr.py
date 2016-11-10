@@ -228,6 +228,20 @@ class get_potential_matches(Resource):
         attendee = request.args.get('attendee')
         event = request.args.get('event')
 
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        cursor.callproc('GetPotentialMatchList', (event, session['username'], attendee))
+
+        data = cursor.fetchall()
+
+        matches = []
+        for d in data:
+            matches.append(d[1])
+
+        conn.commit()
+        headers = {'Content-Type': 'text/html'}
+        return make_response(render_template('get_potential_matches.html', matches=matches),200,headers)
+
 @app.route('/')
 def goto_index():
     return redirect(url_for('index'))
