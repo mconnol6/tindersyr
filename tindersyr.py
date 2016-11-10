@@ -24,46 +24,6 @@ app.config['SECRET_KEY'] = 'this should be changed'
 
 mysql.init_app(app)
 
-#class User():
-#
-#    def __init__(self, netid):
-#        self.netid = netid
-#
-#    is_authenticated = True
-#    is_active = True
-#    is_anonymous = False
-#    
-#    def get_id(self):
-#        return self.netid
-
-
-#login_manager.init_app(app)
-
-#@login_manager.user_loader
-#def load_user(user_id):
-#    u = User(user_id)
-#    return u
-
-#class AddOrg(Resource):
-#    def post(self):
-#        try:
-#            parser = reqparse.RequestParser()
-#            parser.add_argument('name', type=str)
-#            args = parser.parse_args()
-#
-#            n_name = args['name']
-#
-#            conn = mysql.connect()
-#            cursor = conn.cursor()
-#            cursor.callproc('AddOrg', (n_name,))
-#            data = cursor.fetchall()
-#
-#            conn.commit()
-#            return {'StatusCode' : '200', 'Message' : 'Success'}
-#
-#        except Exception as e:
-#            return {'error' : str(e)}
-
 class signup(Resource):
     def get(self):
         headers = {'Content-Type': 'text/html'}
@@ -260,7 +220,13 @@ class create_setup(Resource):
 
         return redirect(url_for('index'))
 
+class get_potential_matches(Resource):
+    def get(self):
+        if 'username' not in session:
+            return redirect(url_for('login'))
 
+        attendee = request.args.get('attendee')
+        event = request.args.get('event')
 
 @app.route('/')
 def goto_index():
@@ -273,7 +239,7 @@ api.add_resource(logout, '/logout')
 api.add_resource(edit_user, '/edit_user')
 api.add_resource(delete_account, '/delete_account')
 api.add_resource(create_setup, '/create_setup')
-#api.add_resource(AddOrg, '/AddOrg')
+api.add_resource(get_potential_matches, '/get_potential_matches')
 
 if __name__ == '__main__':
     app.run()
