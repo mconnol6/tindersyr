@@ -15,6 +15,6 @@ Your setups:
     <br/>
     {{ s.event_name }}
     <br/>
-    <a href="{{ url_for('get_potential_matches', attendee=s.attendee, event=s.event_name) }}">Find a match!</a>
+    <a href="{{ url_for('get_potential_match', attendee=s.attendee, event=s.event_name) }}">Find a match!</a>
     <br/><br/>
 {% endfor %}

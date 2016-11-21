@@ -220,7 +220,55 @@ class create_setup(Resource):
 
         return redirect(url_for('index'))
 
-class get_potential_matches(Resource):
+class update_potential_match_status(Resource):
+    def post(self):
+        if 'username' not in session:
+            return redirect(url_for('login'))
+
+        parser = reqparse.RequestParser()
+        parser.add_argument('status', type=str)
+        parser.add_argument('other_setter_upper', type=str)
+        parser.add_argument('other_attendee', type=str)
+        parser.add_argument('attendee', type=str)
+        parser.add_argument('event', type=str)
+        parser.add_argument('member', type=bool)
+        args = parser.parse_args()
+
+        member = args['member']
+        event = args['event']
+        status = args['status']
+
+        if member == "1":
+            member = 1
+            nonmem_setter_upper = args['other_setter_upper']
+            nonmem_attendee = args['other_attendee']
+            mem_setter_upper = session['username']
+            mem_attendee = args['attendee']
+        else:
+            member = 0
+            mem_setter_upper = args['other_setter_upper']
+            mem_attendee = args['other_attendee']
+            nonmem_setter_upper = session['username']
+            nonmem_attendee = args['attendee']
+
+        conn = mysql.connect()
+        cursor = conn.cursor()
+
+        #need to check if match already exists; if not, create it
+        cursor.callproc('GetPotentialMatch', (mem_setter_upper, nonmem_setter_upper, mem_attendee, nonmem_attendee, event,))
+        
+        data = cursor.fetchall()
+
+        if len(data) == 0:
+            cursor.callproc('CreatePotentialMatch', (mem_setter_upper, nonmem_setter_upper, mem_attendee, nonmem_attendee, event,))
+
+        cursor.callproc('UpdatePotentialMatchStatus', (mem_setter_upper, nonmem_setter_upper, mem_attendee, nonmem_attendee, event, status, member,))
+
+        conn.commit()
+
+        return redirect(url_for('get_potential_match'))
+
+class get_potential_match(Resource):
     def get(self):
         if 'username' not in session:
             return redirect(url_for('login'))
@@ -230,17 +278,45 @@ class get_potential_matches(Resource):
 
         conn = mysql.connect()
         cursor = conn.cursor()
+
         cursor.callproc('GetPotentialMatchList', (event, session['username'], attendee))
 
         data = cursor.fetchall()
 
-        matches = []
-        for d in data:
-            matches.append(d[1])
+        headers = {'Content-Type': 'text/html'}
+        if len(data) == 0:
+            return (render_template('no_new_matches.html'), 200, headers)
+
+        #0 - event
+        #1 - setter upper
+        #2 - attendee
+        #3 - status
+        #4 - member
+        #5 - attendee (again)
+        #6 - name
+        #7 - year
+        #8 - bio
+        #9 - hometown
+        #10 - gender
+        #11 - interested in
+        #12 - number
+        #13 - robot
+
+        name = data[0][6]
+        year = data[0][7]
+        bio = data[0][8]
+        hometown = data[0][9]
+
+        event = data[0][0]
+        other_setter_upper = data[0][1]
+        other_attendee = data[0][2]
+        if data[0][4] == 1:
+            member = 0
+        else:
+            member = 1
 
         conn.commit()
-        headers = {'Content-Type': 'text/html'}
-        return make_response(render_template('get_potential_matches.html', matches=matches),200,headers)
+        return make_response(render_template('get_potential_match.html', name=name, year=year, bio=bio, hometown=hometown, other_setter_upper=other_setter_upper,other_attendee=other_attendee, attendee=attendee, event=event, member=member),200,headers)
 
 @app.route('/')
 def goto_index():
@@ -253,7 +329,8 @@ api.add_resource(logout, '/logout')
 api.add_resource(edit_user, '/edit_user')
 api.add_resource(delete_account, '/delete_account')
 api.add_resource(create_setup, '/create_setup')
-api.add_resource(get_potential_matches, '/get_potential_matches')
+api.add_resource(get_potential_match, '/get_potential_match')
+api.add_resource(update_potential_match_status, '/update_potential_match_status')
 
 if __name__ == '__main__':
     app.run()

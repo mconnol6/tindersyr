@@ -10,6 +10,43 @@ select event_name, attendee, member from setup
 where setup.setter_upper = n;
 end//
 
+create procedure GetPotentialMatch(
+    in msu varchar(10),
+    in nmsu varchar(10),
+    in ma varchar(10),
+    in nma varchar(10),
+    in e varchar(100)
+)
+begin
+    select * from potential_matches
+    where
+        msu = mem_setter_upper
+        and nmsu = nonmem_setter_upper
+        and ma = mem_attendee
+        and nma = nonmem_attendee
+        and e = event_name
+    limit 1;
+end//
+
+create procedure CreatePotentialMatch(
+    in msu varchar(10),
+    in nmsu varchar(10),
+    in ma varchar(10),
+    in nma varchar(10),
+    in e varchar(100)
+)
+begin
+    insert into potential_matches
+    values
+    (msu,
+    nmsu,
+    ma,
+    nma,
+    e,
+    NULL,
+    NULL);
+end//
+
 create procedure UpdatePotentialMatchStatus(
     in msu varchar(10),
     in nmsu varchar(10),
@@ -71,7 +108,7 @@ begin
     into g;
 
     if mem = 1 then
-        select s.setter_upper, s.attendee from setup as s, users as u where
+        select * from setup as s, users as u where
             s.attendee = u.netid
             and s.member = ! mem
             and ii = if (ii = "Both", ii, u.gender)
@@ -88,7 +125,7 @@ begin
             where p.member_status is not NULL);
     else
         
-        select s.setter_upper, s.attendee from setup as s, users as u where
+        select * from setup as s, users as u where
             s.attendee = u.netid
             and s.member = ! mem
             and ii = if (ii = "Both", ii, u.gender)

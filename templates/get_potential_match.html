@@ -1,0 +1,24 @@
+{{ name }} <br/>
+{{ year }} <br/>
+{{ bio }} <br/>
+{{ hometown }} <br/>
+
+<form method="post" action="{{ url_for('update_potential_match_status') }}">
+    <input type="hidden" name="other_setter_upper" value="{{ other_setter_upper }}"/>
+    <input type="hidden" name="other_attendee" value="{{ other_attendee }}"/>
+    <input type="hidden" name="attendee" value="{{ attendee }}"/>
+    <input type="hidden" name="event" value="{{ event }}"/>
+    <input type="hidden" name="member" value="{{ member }}"/>
+    <input type="hidden" name="status" value="Yes"/>
+    <input type="submit" value="Yes"/>
+</form>
+
+<form method="post" action="{{ url_for('update_potential_match_status') }}">
+    <input type="hidden" name="other_setter_upper" value="{{ other_setter_upper }}"/>
+    <input type="hidden" name="other_attendee" value="{{ other_attendee }}"/>
+    <input type="hidden" name="attendee" value="{{ attendee }}"/>
+    <input type="hidden" name="event" value="{{ event }}"/>
+    <input type="hidden" name="member" value="{{ member }}"/>
+    <input type="hidden" name="status" value="No"/>
+    <input type="submit" value="No"/>
+</form>
