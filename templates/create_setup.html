@@ -11,7 +11,7 @@
             <label for="attendee_netid">Your friend's netid:</label>
             <select name="attendee_netid">
             {% for f in friends %}
-                <option value="{{ f }}">{{ f }}</option>
+                <option value="{{ f.netid }}">{{ f.name }}</option>
             {% endfor %}
             </select>
 

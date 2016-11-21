@@ -11,6 +11,11 @@ class Setup:
         self.status = status
         self.member = member
 
+class Friend:
+    def __init__(self, netid, name):
+        self.name = name
+        self.netid = netid
+
 mysql = MySQL()
 app = Flask(__name__)
 api = Api(app)
@@ -230,7 +235,10 @@ class create_setup(Resource):
         
         friends = []
         for f in data:
-            friends.append(f[0])
+            cursor.execute("SELECT name FROM users WHERE netid = '{}'".format(f[0]))
+            data = cursor.fetchall()
+            if len(data) > 0:
+                friends.append(Friend(f[0], data[0][0]))
 
         cursor.execute("SELECT name FROM event")
         data = cursor.fetchall()
