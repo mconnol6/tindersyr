@@ -57,6 +57,7 @@ class signup(Resource):
             data = cursor.fetchall()
 
             conn.commit()
+            conn.close()
             return redirect(url_for('index'))
 
         except Exception as e:
@@ -83,6 +84,7 @@ class edit_user(Resource):
             number = user[7]
 
             conn.commit()
+            conn.close()
             
             headers = {'Content-Type': 'text/html'}
             return make_response(render_template('edit_user.html', netid=session['username'], name=name, year=year, bio=bio, hometown=hometown, gender=gender, interested_in=interested_in, number=number),200,headers)
@@ -117,6 +119,7 @@ class edit_user(Resource):
             data = cursor.fetchall()
 
             conn.commit()
+            conn.close()
             return redirect(url_for('index'))
 
         except Exception as e:
@@ -136,6 +139,9 @@ class index(Resource):
         for s in data:
             setup = Setup(s[0], session['username'], s[1], "", s[2])
             setups.append(setup)
+
+        conn.commit()
+        conn.close()
 
         headers = {'Content-Type': 'text/html'}
         return make_response(render_template('index.html', name=session['username'], setups=setups),200,headers)
@@ -158,6 +164,7 @@ class login(Resource):
             cursor.callproc('GetUser', (netid,))
             data = cursor.fetchall()
             conn.commit()
+            conn.close()
 
             if len(data) != 0:
                 session['username'] = netid
@@ -177,6 +184,7 @@ class delete_account(Resource):
         cursor.callproc('DeleteUser', (session['username'],))
         data = cursor.fetchall()
         conn.commit()
+        conn.close()
         session.pop('username', None)
         return redirect(url_for('login'))
 
@@ -217,6 +225,7 @@ class create_setup(Resource):
         cursor = conn.cursor()
         cursor.callproc('CreateSetup', (event_name, setter_upper_netid, attendee_netid, member))
         conn.commit()
+        conn.close()
 
         return redirect(url_for('index'))
 
@@ -231,14 +240,15 @@ class update_potential_match_status(Resource):
         parser.add_argument('other_attendee', type=str)
         parser.add_argument('attendee', type=str)
         parser.add_argument('event', type=str)
-        parser.add_argument('member', type=bool)
+        parser.add_argument('member', type=str)
         args = parser.parse_args()
 
+        attendee = args['attendee']
         member = args['member']
         event = args['event']
         status = args['status']
 
-        if member == "1":
+        if member == "No":
             member = 1
             nonmem_setter_upper = args['other_setter_upper']
             nonmem_attendee = args['other_attendee']
@@ -265,8 +275,9 @@ class update_potential_match_status(Resource):
         cursor.callproc('UpdatePotentialMatchStatus', (mem_setter_upper, nonmem_setter_upper, mem_attendee, nonmem_attendee, event, status, member,))
 
         conn.commit()
+        conn.close()
 
-        return redirect(url_for('get_potential_match'))
+        return redirect(url_for('get_potential_match', attendee=attendee,event=event))
 
 class get_potential_match(Resource):
     def get(self):
@@ -310,12 +321,14 @@ class get_potential_match(Resource):
         event = data[0][0]
         other_setter_upper = data[0][1]
         other_attendee = data[0][2]
-        if data[0][4] == 1:
-            member = 0
+        if data[0][4] == True:
+            member = "Yes"
         else:
-            member = 1
+            member = "No"
 
         conn.commit()
+        conn.close()
+
         return make_response(render_template('get_potential_match.html', name=name, year=year, bio=bio, hometown=hometown, other_setter_upper=other_setter_upper,other_attendee=other_attendee, attendee=attendee, event=event, member=member),200,headers)
 
 @app.route('/')
