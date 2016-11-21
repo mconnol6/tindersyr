@@ -3,6 +3,10 @@
     <head>
     </head>
     <body>
+        <form method="post" action="{{ url_for('add_friend') }}">
+            <input type="text" name="friend"/>
+            <input type="submit" value="Add friend!"/>
+        </form>
         <form method="post" action="{{ url_for('create_setup') }}">
             <label for="attendee_netid">Your friend's netid:</label>
             <select name="attendee_netid">

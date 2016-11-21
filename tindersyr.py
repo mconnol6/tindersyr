@@ -63,6 +63,27 @@ class signup(Resource):
         except Exception as e:
             return {'error' : str(e)}
 
+class add_friend(Resource):
+    def post(self):
+        if 'username' not in session:
+            return redirect(url_for('login'))
+        try:
+            parser = reqparse.RequestParser()
+            parser.add_argument('friend', type=str)
+            args = parser.parse_args()
+
+            conn = mysql.connect()
+            cursor = conn.cursor()
+            insert_stmt = "INSERT INTO friends VALUES ( %(netid)s, %(friend)s);"
+            cursor.execute(insert_stmt, { 'netid': session['username'], 'friend': args['friend'] })
+
+            conn.commit()
+            conn.close()
+            return redirect(url_for('create_setup'))
+
+        except Exception as e:
+            return {'error' : str(e)}
+
 class edit_user(Resource):
     def get(self):
         if 'username' not in session:
@@ -366,6 +387,7 @@ api.add_resource(delete_account, '/delete_account')
 api.add_resource(create_setup, '/create_setup')
 api.add_resource(get_potential_match, '/get_potential_match')
 api.add_resource(update_potential_match_status, '/update_potential_match_status')
+api.add_resource(add_friend, '/add_friend')
 
 if __name__ == '__main__':
     app.run()
