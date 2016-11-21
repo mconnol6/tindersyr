@@ -10,6 +10,39 @@ select event_name, attendee, member from setup
 where setup.setter_upper = n;
 end//
 
+create procedure UpdatePotentialMatchStatus(
+    in msu varchar(10),
+    in nmsu varchar(10),
+    in ma varchar(10),
+    in nma varchar(10),
+    in e varchar(100),
+    in s varchar(100),
+    in m bool
+)
+begin
+    if m = 1 then 
+        update potential_matches
+        set member_status = s
+        where
+            mem_setter_upper = msu
+            and nonmem_setter_upper = nmsu
+            and mem_attendee = ma
+            and nonmem_attendee = nma
+            and event_name = e
+        limit 1;
+    else
+        update potential_matches
+        set nonmember_status = s
+        where
+            mem_setter_upper = msu
+            and nonmem_setter_upper = nmsu
+            and mem_attendee = ma
+            and nonmem_attendee = nma
+            and event_name = e
+        limit 1;
+    end if;
+end//
+
 create procedure GetPotentialMatchList(
     in e varchar(100),
     in su varchar(10),
@@ -51,7 +84,8 @@ begin
                 p.nonmem_setter_upper, 
                 p.mem_attendee, p.nonmem_attendee, 
                 p.event_name 
-            from potential_matches as p );
+            from potential_matches as p 
+            where p.member_status is not NULL);
     else
         
         select s.setter_upper, s.attendee from setup as s, users as u where
@@ -67,7 +101,8 @@ begin
                 p.nonmem_setter_upper, 
                 p.mem_attendee, p.nonmem_attendee, 
                 p.event_name 
-            from potential_matches as p );
+            from potential_matches as p
+            where p.nonmember_status is not NULL);
 
     end if;
 end//
