@@ -18,6 +18,7 @@ create procedure GetPotentialMatchList(
 begin
     declare mem bool default 0;
     declare ii varchar(20) default "Both";
+    declare g varchar(20) default "";
 
     select member from setup where
         su = setter_upper
@@ -31,18 +32,44 @@ begin
     limit 1
     into ii;
 
-    select s.setter_upper, s.attendee from setup as s, users as u where
-        s.attendee = u.netid
-        and s.member = ! mem
-        and u.gender = ii
-        and (s.setter_upper, su, s.attendee, a, e)
-        not in
-        ( select 
-            p.mem_setter_upper, 
-            p.nonmem_setter_upper, 
-            p.mem_attendee, p.nonmem_attendee, 
-            p.event_name 
-        from potential_matches as p );
+    select gender from users where
+        a = netid
+    limit 1
+    into g;
+
+    if mem = 1 then
+        select s.setter_upper, s.attendee from setup as s, users as u where
+            s.attendee = u.netid
+            and s.member = ! mem
+            and ii = if (ii = "Both", ii, u.gender)
+            and g = if (u.interested_in = "Both", g, u.interested_in)
+            and s.event_name = e
+            and (su, s.setter_upper, a, s.attendee, e)
+            not in
+            ( select 
+                p.mem_setter_upper, 
+                p.nonmem_setter_upper, 
+                p.mem_attendee, p.nonmem_attendee, 
+                p.event_name 
+            from potential_matches as p );
+    else
+        
+        select s.setter_upper, s.attendee from setup as s, users as u where
+            s.attendee = u.netid
+            and s.member = ! mem
+            and ii = if (ii = "Both", ii, u.gender)
+            and g = if (u.interested_in = "Both", g, u.interested_in)
+            and s.event_name = e
+            and (s.setter_upper, su, s.attendee, a, e)
+            not in
+            ( select 
+                p.mem_setter_upper, 
+                p.nonmem_setter_upper, 
+                p.mem_attendee, p.nonmem_attendee, 
+                p.event_name 
+            from potential_matches as p );
+
+    end if;
 end//
     
 
