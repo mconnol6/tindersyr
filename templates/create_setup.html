@@ -8,7 +8,7 @@
             <input type="submit" value="Add friend!"/>
         </form>
         <form method="post" action="{{ url_for('create_setup') }}">
-            <label for="attendee_netid">Your friend's netid:</label>
+            <label for="attendee_netid">Friend</label>
             <select name="attendee_netid">
             {% for f in friends %}
                 <option value="{{ f.netid }}">{{ f.name }}</option>
