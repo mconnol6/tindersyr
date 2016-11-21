@@ -204,3 +204,13 @@ create table potential_matches(
 
 //example of inserting into event table
 insert into event(name, date, time, location, org_name) values ("Pasquerilla East Formal", str_to_date('11,5,2016', '%m,%d,%Y'), maketime(22,0,0), "Jordan Hall of Science", "Pasquerilla East Hall");
+
+create table friends(
+    netid varchar(10) not null,
+    friend varchar(10) not null,
+    primary key(netid, friend),
+    foreign key(netid)
+        references users(netid),
+    foreign key(friend)
+        references users(netid)
+);

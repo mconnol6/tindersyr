@@ -5,9 +5,13 @@
     <body>
         <form method="post" action="{{ url_for('create_setup') }}">
             <label for="attendee_netid">Your friend's netid:</label>
-            <input type="text" name="attendee_netid"/><br/>
+            <select name="attendee_netid">
+            {% for f in friends %}
+                <option value="{{ f }}">{{ f }}</option>
+            {% endfor %}
+            </select>
 
-
+            <br/>
             <label for="event">Event</label>
             <input type="text" name="event"/><br/>
 

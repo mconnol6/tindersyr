@@ -199,9 +199,24 @@ class create_setup(Resource):
     def get(self):
         if 'username' not in session:
             return redirect(url_for('login'))
+        
+        conn = mysql.connect()
+        cursor = conn.cursor()
+
+        cursor.execute("SELECT friend FROM friends WHERE netid = '{}'".format(session['username']))
+
+        data = cursor.fetchall()
+        conn.commit()
+        conn.close()
+
+        friends = []
+        for f in data:
+            friends.append(f[0])
+
+        print friends
 
         headers = {'Content-Type': 'text/html'}
-        return make_response(render_template('create_setup.html'),200,headers)
+        return make_response(render_template('create_setup.html', friends=friends),200,headers)
 
     def post(self):
         if 'username' not in session:
