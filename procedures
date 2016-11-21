@@ -122,7 +122,8 @@ begin
                 p.mem_attendee, p.nonmem_attendee, 
                 p.event_name 
             from potential_matches as p 
-            where p.member_status is not NULL);
+            where p.member_status is not NULL
+            or p.nonmember_status = "No");
     else
         
         select * from setup as s, users as u where
@@ -139,7 +140,8 @@ begin
                 p.mem_attendee, p.nonmem_attendee, 
                 p.event_name 
             from potential_matches as p
-            where p.nonmember_status is not NULL);
+            where p.nonmember_status is not NULL
+            or p.member_status = "No");
 
     end if;
 end//
