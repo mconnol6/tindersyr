@@ -12,8 +12,13 @@
             </select>
 
             <br/>
+            
             <label for="event">Event</label>
-            <input type="text" name="event"/><br/>
+            <select name="event">
+            {% for e in events %}
+                <option value="{{ e }}">{{ e }}</option>
+            {% endfor %}
+            </select><br/>
 
             <input type="radio" name="member" value="yes" checked>Member<br>
             <input type="radio" name="member" value="no">Non-member<br>

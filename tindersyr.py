@@ -206,17 +206,24 @@ class create_setup(Resource):
         cursor.execute("SELECT friend FROM friends WHERE netid = '{}'".format(session['username']))
 
         data = cursor.fetchall()
-        conn.commit()
-        conn.close()
-
+        
         friends = []
         for f in data:
             friends.append(f[0])
 
-        print friends
+        cursor.execute("SELECT name FROM event")
+        data = cursor.fetchall()
+
+        events = []
+        for e in data:
+            events.append(e[0])
+
+        conn.commit()
+        conn.close()
+
 
         headers = {'Content-Type': 'text/html'}
-        return make_response(render_template('create_setup.html', friends=friends),200,headers)
+        return make_response(render_template('create_setup.html', friends=friends, events=events),200,headers)
 
     def post(self):
         if 'username' not in session:
