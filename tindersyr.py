@@ -30,24 +30,17 @@ app.config['SECRET_KEY'] = 'this should be changed'
 mysql.init_app(app)
 
 #gets list of matches for netid
-#member and attendee are boolean values
-def get_matches_query(netid, member, attendee):
+#member is a boolean value
+def get_matches_query(attendee, setter_upper, event, member):
         conn = mysql.connect()
         cursor = conn.cursor()
 
-        if member == "0":
-            member = False
+        if (member == "1"):
+            sql_stmt = "SELECT nonmem_attendee FROM potential_matches WHERE mem_attendee='{}' and mem_setter_upper='{}' and event_name='{}' and member_status= 'Yes' and nonmember_status='Yes'".format(attendee, setter_upper, event)
         else:
-            member = True
+            sql_stmt = "SELECT mem_attendee FROM potential_matches WHERE nonmem_attendee='{}' and nonmem_setter_upper='{}' and event_name='{}' and member_status= 'Yes' and nonmember_status='Yes'".format(attendee, setter_upper, event)
 
-        if (member and attendee):
-            cursor.execute("SELECT nonmem_attendee FROM potential_matches WHERE mem_attendee='{}' and member_status= 'Yes' and nonmember_status='Yes'".format(netid))
-        elif (member and not attendee):
-            cursor.execute("SELECT nonmem_attendee FROM potential_matches WHERE mem_setter_upper='{}' and member_status= 'Yes' and nonmember_status='Yes'".format(netid))
-        elif (not member and not attendee):
-            cursor.execute("SELECT mem_attendee FROM potential_matches WHERE nonmem_setter_upper='{}' and member_status= 'Yes' and nonmember_status='Yes'".format(netid))
-        else:
-            cursor.execute("SELECT mem_attendee FROM potential_matches WHERE nonmem_attendee='{}' and member_status= 'Yes' and nonmember_status='Yes'".format(netid))
+        cursor.execute(sql_stmt)
 
         data = cursor.fetchall()
         matches = []
@@ -110,10 +103,10 @@ class get_matches(Resource):
             parser = reqparse.RequestParser()
             parser.add_argument('netid')
             parser.add_argument('member')
-            parser.add_argument('attendee')
+            parser.add_argument('event')
             args = parser.parse_args()
 
-            friends = get_matches_query(args['netid'], args['member'], args['attendee'])
+            friends = get_matches_query(args['netid'], session['username'], args['event'], args['member'])
             headers = {'Content-Type': 'text/html'}
             return make_response(render_template('get_matches.html', friends=friends), 200, headers)
 
