@@ -55,6 +55,22 @@ def get_matches_query(attendee, setter_upper, event, member):
         conn.close()
         return matches
 
+def get_setups(netid, status):
+    conn = mysql.connect()
+    cursor = conn.cursor()
+    sql_stmt = "SELECT event_name, attendee, member from setup where setup.setter_upper = '{}' and status= '{}'".format(netid, status)
+    cursor.execute(sql_stmt)
+    data = cursor.fetchall()
+
+    setups = []
+    for s in data:
+        setup = Setup(s[0], session['username'], s[1], "", s[2])
+        setups.append(setup)
+
+    conn.commit()
+    conn.close()
+    return setups
+
 class signup(Resource):
     def get(self):
         headers = {'Content-Type': 'text/html'}
@@ -204,19 +220,12 @@ class index(Resource):
 
             conn = mysql.connect()
             cursor = conn.cursor()
-            cursor.callproc('GetSetups', (session['username'],))
-            data = cursor.fetchall()
-
-            setups = []
-            for s in data:
-                setup = Setup(s[0], session['username'], s[1], "", s[2])
-                setups.append(setup)
-
-            conn.commit()
-            conn.close()
+            
+            current_setups = get_setups(session['username'], "Searching")
+            past_setups = get_setups(session['username'], "Not Searching")
 
             headers = {'Content-Type': 'text/html'}
-            return make_response(render_template('index.html', name=session['username'], setups=setups),200,headers)
+            return make_response(render_template('index.html', name=session['username'], current_setups=current_setups, past_setups=past_setups),200,headers)
         
         except Exception as e:
             return {'error': str(e) }

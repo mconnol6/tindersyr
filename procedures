@@ -4,6 +4,7 @@ create procedure DeleteUser(in id varchar(10)) begin delete from users where net
 
 create procedure GetSetups(
     in n varchar(10)
+
 )
 begin
 select event_name, attendee, member from setup

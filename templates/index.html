@@ -8,9 +8,9 @@ hello {{ name }}
     <input value="Delete Account" type="submit"/>
 </form>
 
-Your setups:
+Currently searching:
 <br/>
-{% for s in setups %}
+{% for s in current_setups %}
     {{ s.attendee }}
     <br/>
     {{ s.event_name }}
@@ -23,6 +23,20 @@ Your setups:
     </form>
     <a href="{{ url_for('get_potential_match', attendee=s.attendee, event=s.event_name) }}">Find a match!</a>
     <br/><br/>
+{% endfor %}
+
+Your past setups:
+{% for s in past_setups %}
+    {{ s.attendee }}
+    <br/>
+    {{ s.event_name }}
+    <br/>
+    <form method="POST" action="{{ url_for('get_matches') }}">
+        <input type="hidden" name="netid" value="{{ s.attendee }}"/>
+        <input type="hidden" name="member" value="{{ s.member }}"/>
+        <input type="hidden" name="event" value="{{ s.event_name }}"/>
+        <input type="submit" value="Matches so far"/>
+    </form>
 {% endfor %}
 
 <br/>
