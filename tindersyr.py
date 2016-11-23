@@ -29,6 +29,39 @@ app.config['SECRET_KEY'] = 'this should be changed'
 
 mysql.init_app(app)
 
+#gets list of matches for netid
+#member and attendee are boolean values
+def get_matches_query(netid, member, attendee):
+        conn = mysql.connect()
+        cursor = conn.cursor()
+
+        if member == "0":
+            member = False
+        else:
+            member = True
+
+        if (member and attendee):
+            cursor.execute("SELECT nonmem_attendee FROM potential_matches WHERE mem_attendee='{}' and member_status= 'Yes' and nonmember_status='Yes'".format(netid))
+        elif (member and not attendee):
+            cursor.execute("SELECT nonmem_attendee FROM potential_matches WHERE mem_setter_upper='{}' and member_status= 'Yes' and nonmember_status='Yes'".format(netid))
+        elif (not member and not attendee):
+            cursor.execute("SELECT mem_attendee FROM potential_matches WHERE nonmem_setter_upper='{}' and member_status= 'Yes' and nonmember_status='Yes'".format(netid))
+        else:
+            cursor.execute("SELECT mem_attendee FROM potential_matches WHERE nonmem_attendee='{}' and member_status= 'Yes' and nonmember_status='Yes'".format(netid))
+
+        data = cursor.fetchall()
+        matches = []
+        for m in data:
+            cursor.execute("SELECT name FROM users WHERE netid='{}'".format(m[0]))
+            d2 = cursor.fetchall()
+            if len(d2) != 0:
+                friend = Friend(m[0], d2[0][0])
+                matches.append(friend)
+
+        conn.commit()
+        conn.close()
+        return matches
+
 class signup(Resource):
     def get(self):
         headers = {'Content-Type': 'text/html'}
@@ -67,6 +100,25 @@ class signup(Resource):
 
         except Exception as e:
             return {'error' : str(e)}
+
+class get_matches(Resource):
+    def post(self):
+        if 'username' not in session:
+            return redirect(url_for('login'))
+
+        try:
+            parser = reqparse.RequestParser()
+            parser.add_argument('netid')
+            parser.add_argument('member')
+            parser.add_argument('attendee')
+            args = parser.parse_args()
+
+            friends = get_matches_query(args['netid'], args['member'], args['attendee'])
+            headers = {'Content-Type': 'text/html'}
+            return make_response(render_template('get_matches.html', friends=friends), 200, headers)
+
+        except Exception as e:
+            return {'error': str(e) }
 
 class add_friend(Resource):
     def post(self):
@@ -153,24 +205,28 @@ class edit_user(Resource):
 
 class index(Resource):
     def get(self):
-        if 'username' not in session:
-            return redirect(url_for('login'))
+        try:
+            if 'username' not in session:
+                return redirect(url_for('login'))
 
-        conn = mysql.connect()
-        cursor = conn.cursor()
-        cursor.callproc('GetSetups', (session['username'],))
-        data = cursor.fetchall()
+            conn = mysql.connect()
+            cursor = conn.cursor()
+            cursor.callproc('GetSetups', (session['username'],))
+            data = cursor.fetchall()
 
-        setups = []
-        for s in data:
-            setup = Setup(s[0], session['username'], s[1], "", s[2])
-            setups.append(setup)
+            setups = []
+            for s in data:
+                setup = Setup(s[0], session['username'], s[1], "", s[2])
+                setups.append(setup)
 
-        conn.commit()
-        conn.close()
+            conn.commit()
+            conn.close()
 
-        headers = {'Content-Type': 'text/html'}
-        return make_response(render_template('index.html', name=session['username'], setups=setups),200,headers)
+            headers = {'Content-Type': 'text/html'}
+            return make_response(render_template('index.html', name=session['username'], setups=setups),200,headers)
+        
+        except Exception as e:
+            return {'error': str(e) }
 
 class login(Resource):
     def get(self):
@@ -396,6 +452,7 @@ api.add_resource(create_setup, '/create_setup')
 api.add_resource(get_potential_match, '/get_potential_match')
 api.add_resource(update_potential_match_status, '/update_potential_match_status')
 api.add_resource(add_friend, '/add_friend')
+api.add_resource(get_matches, '/get_matches')
 
 if __name__ == '__main__':
     app.run()
