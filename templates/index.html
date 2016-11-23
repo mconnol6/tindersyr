@@ -21,7 +21,11 @@ Currently searching:
         <input type="hidden" name="event" value="{{ s.event_name }}"/>
         <input type="submit" value="Matches so far"/>
     </form>
-    <a href="{{ url_for('get_potential_match', attendee=s.attendee, event=s.event_name) }}">Find a match!</a>
+    <form method="POST" action="{{ url_for('get_potential_match') }}"/>
+        <input type="hidden" name="event" value="{{ s.event_name }}"/>
+        <input type="hidden" name="attendee" value="{{ s.attendee }}"/>
+        <input type="submit" value="Find a match!"/>
+    </form>
     <br/><br/>
 {% endfor %}
 

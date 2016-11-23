@@ -386,15 +386,21 @@ class update_potential_match_status(Resource):
         conn.commit()
         conn.close()
 
-        return redirect(url_for('get_potential_match', attendee=attendee,event=event))
+        return redirect(url_for('get_potential_match'), code=307)
+        #return redirect(url_for('get_potential_match', attendee=attendee,event=event))
 
 class get_potential_match(Resource):
-    def get(self):
+    def post(self):
         if 'username' not in session:
             return redirect(url_for('login'))
 
-        attendee = request.args.get('attendee')
-        event = request.args.get('event')
+        parser = reqparse.RequestParser()
+        parser.add_argument('attendee', type=str)
+        parser.add_argument('event', type=str)
+        args = parser.parse_args()
+
+        event=args['event']
+        attendee=args['attendee']
 
         conn = mysql.connect()
         cursor = conn.cursor()
