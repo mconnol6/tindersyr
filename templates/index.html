@@ -26,10 +26,17 @@ Currently searching:
         <input type="hidden" name="attendee" value="{{ s.attendee }}"/>
         <input type="submit" value="Find a match!"/>
     </form>
+    <form method="POST" action="{{ url_for('update_setup_status') }}">
+        <input type="hidden" name="status" value="Not Searching"/>
+        <input type="hidden" name="attendee" value="{{ s.attendee }}"/>
+        <input type="hidden" name="event" value="{{ s.event_name }}"/>
+        <input type="submit" value="Stop searching for matches"/>
+    </form>
     <br/><br/>
 {% endfor %}
 
 Your past setups:
+<br/><br/>
 {% for s in past_setups %}
     {{ s.attendee }}
     <br/>
@@ -41,6 +48,13 @@ Your past setups:
         <input type="hidden" name="event" value="{{ s.event_name }}"/>
         <input type="submit" value="Matches so far"/>
     </form>
+    <form method="POST" action="{{ url_for('update_setup_status') }}">
+        <input type="hidden" name="status" value="Searching"/>
+        <input type="hidden" name="attendee" value="{{ s.attendee }}"/>
+        <input type="hidden" name="event" value="{{ s.event_name }}"/>
+        <input type="submit" value="Start searching again"/>
+    </form>
+    <br/><br/>
 {% endfor %}
 
 <br/>

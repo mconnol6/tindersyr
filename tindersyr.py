@@ -338,6 +338,31 @@ class create_setup(Resource):
 
         return redirect(url_for('index'))
 
+class update_setup_status(Resource):
+    def post(self):
+        if 'username' not in session:
+            return redirect(url_for('login'))
+
+        try:
+            parser = reqparse.RequestParser()
+            parser.add_argument('attendee', type=str)
+            parser.add_argument('event', type=str)
+            parser.add_argument('status', type=str)
+
+            args = parser.parse_args()
+
+            conn = mysql.connect()
+            cursor = conn.cursor()
+            mysql_stmt = "UPDATE setup SET status = '{}' WHERE event_name = '{}' and setter_upper = '{}' and attendee = '{}'".format(args['status'], args['event'], session['username'], args['attendee'])
+            print mysql_stmt
+            cursor.execute(mysql_stmt)
+            conn.commit()
+            conn.close()
+            return redirect(url_for('index'))
+
+        except Exception as e:
+            return {'error' : str(e)}
+
 class update_potential_match_status(Resource):
     def post(self):
         if 'username' not in session:
@@ -387,7 +412,6 @@ class update_potential_match_status(Resource):
         conn.close()
 
         return redirect(url_for('get_potential_match'), code=307)
-        #return redirect(url_for('get_potential_match', attendee=attendee,event=event))
 
 class get_potential_match(Resource):
     def post(self):
@@ -461,6 +485,7 @@ api.add_resource(get_potential_match, '/get_potential_match')
 api.add_resource(update_potential_match_status, '/update_potential_match_status')
 api.add_resource(add_friend, '/add_friend')
 api.add_resource(get_matches, '/get_matches')
+api.add_resource(update_setup_status, '/update_setup_status')
 
 if __name__ == '__main__':
     app.run()
