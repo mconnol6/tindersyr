@@ -169,12 +169,14 @@ class edit_user(Resource):
             gender = user[5]
             interested_in = user[6]
             number = user[7]
+            dorm = user[9]
+            major = user[10]
 
             conn.commit()
             conn.close()
             
             headers = {'Content-Type': 'text/html'}
-            return make_response(render_template('edit_user.html', netid=session['username'], name=name, year=year, bio=bio, hometown=hometown, gender=gender, interested_in=interested_in, number=number),200,headers)
+            return make_response(render_template('edit_user.html', netid=session['username'], name=name, year=year, bio=bio, hometown=hometown, gender=gender, interested_in=interested_in, number=number, dorm=dorm, major=major),200,headers)
 
         except Exception as e:
             return {'error' : str(e)}
@@ -189,6 +191,8 @@ class edit_user(Resource):
             parser.add_argument('gender', type=str)
             parser.add_argument('interested_in', type=str)
             parser.add_argument('number', type=str)
+            parser.add_argument('major', type=str)
+            parser.add_argument('dorm', type=str)
             args = parser.parse_args()
 
             n_netid = session['username']
@@ -199,10 +203,12 @@ class edit_user(Resource):
             n_gender = args['gender']
             n_interested_in = args['interested_in']
             n_number = args['number']
+            n_major = args['major']
+            n_dorm = args['dorm']
 
             conn = mysql.connect()
             cursor = conn.cursor()
-            cursor.callproc('UpdateUser', (n_netid, n_name, n_year, n_bio, n_hometown, n_gender, n_interested_in, n_number,))
+            cursor.callproc('UpdateUser', (n_netid, n_name, n_year, n_bio, n_hometown, n_gender, n_interested_in, n_number, n_major, n_dorm,))
             data = cursor.fetchall()
 
             conn.commit()
