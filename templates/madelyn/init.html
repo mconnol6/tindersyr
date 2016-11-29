@@ -1,0 +1,630 @@
+<html>
+
+
+	<head>
+		<script
+			src="https://code.jquery.com/jquery-3.1.1.min.js"
+			integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+			crossorigin="anonymous"></script>
+		<link rel="stylesheet" type="text/css" href="css/bootswatch-cyborg.css">
+		<link rel="stylesheet" type="text/css" href="css/style.css">
+		<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+		<script src="js/friendDanceTable.js"></script>
+		<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<title>tiNDer - the SYR edition</title>
+	</head>
+
+
+
+	<body>
+		<nav class="navbar navbar-default">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="index.html">tiNDer</a>
+			</div>
+			<ul class="nav navbar-nav">
+				<li><a href="#myMatches">my matches</a></li>
+				<li><a href="#myFriendsMatches">friends' matches</a></li>
+				<li><a id="editProfileLink" href="#editProfileModal" data-dismiss="modal" data-toggle="modal" data-target="#editProfileModal"	
+					>edit profile</a></li>
+				<li><a href="index.html">logout</a></li>
+			</ul>
+			<ul class="nav navbar-nav navbar-right">
+				<li><a href="#"><img height=20px width=20px src="media/jaredPic.jpg" style="border-radius: 50%;"></a> </li>
+				<li><a href="#">Hi, <span id="userName">Paul</span>!</a></li> 
+			</ul>
+		</div>
+		</nav>
+
+
+		<!-- No More Options Modal -->
+		<div id="noMoreOptionsModal" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title">Great Swiping!</h4>
+					</div>
+					<div class="modal-body">
+						<p>You've gone through all the candidates. Time to set up someone else!</p>
+					</div>
+					<div class="modal-footer">
+						<button id="newFriendAndDance" type="button" class="btn btn-primary" data-dismiss="modal">Okay</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+
+		<!-- Add Friend Modal -->
+		<div id="addFriendModal" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title">Add a Friend</h4>
+					</div>
+					<div class="modal-body">
+						<label class="control-label" for="friendName">Name:</label>
+						<input class="form-control" id="friendName" type="text">
+						<br>
+						<label class="control-label" for="friendNetID">NetID:</label>
+						<p class="text-warning">Careful! NetID cannot be changed<p>
+						<input class="form-control" id="friendNetID" type="text">
+						<br>
+						<label class="control-label" for="friendHometown">Hometown:</label>
+						<input class="form-control" id="friendHometown" type="text">
+						<br>
+						<label class="control-label" for="friendBio">Bio:</label>
+						<input class="form-control" id="friendBio" type="text">
+						<br>
+						<label class="control-label" for="friendMajor">Major:</label>
+						<input class="form-control" id="friendMajor" type="text">
+						<br>
+						<div class="form-group">
+							<label for="friendDorm">Dorm (must be ND):</label>
+							<select class="form-control" id="friendDorm">
+								<option>Alumni</option>
+								<option>Badin</option>
+								<option>BP</option>
+								<option>Carroll</option>
+								<option>Cav</option>
+								<option>Dillon</option>
+								<option>Duncan</option>
+								<option>Dunne</option>
+								<option>Farley</option>
+								<option>Fisher</option>
+								<option>Flaherty</option>
+								<option>Howard</option>
+								<option>Keenan</option>
+								<option>Knott</option>
+								<option>Lewis</option>
+								<option>Lyons</option>
+								<option>McGlinn</option>
+								<option>Morrissey</option>
+								<option>Old College</option>
+								<option>O'Neill</option>
+								<option>Pangborn</option>
+								<option>PE</option>
+								<option>PDub</option>
+								<option>Ryan</option>
+								<option>Sted's</option>
+								<option>Siegfried</option>
+								<option>Sorin</option>
+								<option>Walsh</option>
+								<option>Welsh Fam</option>
+								<option>Zahm</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="friendSex">Gender:</label>
+							<select class="form-control" id="friendSex">
+								<option>Female</option>
+								<option>Male</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="friendYear">Class Year:</label>
+							<select id="friendYear" class="form-control">
+								<option>2017</option>
+								<option>2018</option>
+								<option>2019</option>
+								<option>2020</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="friendSex">Gender:</label>
+							<select id="friendSex" class="form-control" id="sel1">
+								<option>Female</option>
+								<option>Male</option>
+							</select>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+						<button id="addFriendSave" type="button" class="btn btn-primary" data-dismiss="modal">Go</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+
+
+
+
+
+		<!-- Edit Profile Modal -->
+		<div id="editProfileModal" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title">Edit Profile</h4>
+						<h5 id="userNetID" class="modal-title text-info"><span id="userNetID">mnelso12</span></h5>
+					</div>
+					<div class="modal-body">
+						<label class="control-label" for="netIDInput">Name:</label>
+						<input id="editName" class="form-control" id="netIDInput" type="text">
+						<br>
+						<label class="control-label" for="netIDInput">Hometown:</label>
+						<input id="editHometown" class="form-control" id="netIDInput" type="text">
+						<br>
+						<label class="control-label" for="netIDInput">Major:</label>
+						<input id="editMajor" class="form-control" id="netIDInput" type="text">
+						<br>
+						<label class="control-label" for="bioInput">Bio:</label>
+						<input id="editBio" class="form-control" id="bioInput" type="text">
+						<br>
+						<div class="form-group">
+							<label for="sel1">Dorm (must be ND):</label>
+							<select id="editDorm" class="form-control" id="sel1">
+								<option>Alumni</option>
+								<option>Badin</option>
+								<option>BP</option>
+								<option>Carroll</option>
+								<option>Cav</option>
+								<option>Dillon</option>
+								<option>Duncan</option>
+								<option>Dunne</option>
+								<option>Farley</option>
+								<option>Fisher</option>
+								<option>Flaherty</option>
+								<option>Howard</option>
+								<option>Keenan</option>
+								<option>Knott</option>
+								<option>Lewis</option>
+								<option>Lyons</option>
+								<option>McGlinn</option>
+								<option>Morrissey</option>
+								<option>Old College</option>
+								<option>O'Neill</option>
+								<option>Pangborn</option>
+								<option>PE</option>
+								<option>PDub</option>
+								<option>Ryan</option>
+								<option>Sted's</option>
+								<option>Siegfried</option>
+								<option>Sorin</option>
+								<option>Walsh</option>
+								<option>Welsh Fam</option>
+								<option>Zahm</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="editYear">Class Year:</label>
+							<select id="editYear" class="form-control">
+								<option>2017</option>
+								<option>2018</option>
+								<option>2019</option>
+								<option>2020</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="editSex">Gender:</label>
+							<select id="editSex" class="form-control" id="sel1">
+								<option>Female</option>
+								<option>Male</option>
+							</select>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+						<button id="saveProfileEdit" type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+
+
+		<div id="choices" style="margin: 0px; padding: 0px;">
+
+			<center>
+
+				<div style="
+					margin-top: 50px;
+					height: 100px;
+					">
+					<h4 style="display:inline; margin-right: 25px;">Hi, <span id="userName2">Paul</span>! Let's set up your friends.</h4>
+					<a id="go" href="#" class="btn btn-primary btn-lg">Start Swiping!</a>
+				</div>
+
+			</center>
+
+
+
+
+
+
+			<div style="
+				margin: 0px 50px;
+				height: 100%;
+				">
+
+
+				<table style="width: 100%;">
+					<tr style="width: 100%;">
+						<td style="width: 45%;">
+
+
+							<!-- choose a friend / dance table -->
+
+							<table id="friendTable" class="table table-striped table-hover" style="width: 100%; text-align: center;">
+								<thead>
+									<tr style="width: 100%; padding-bottom: 10px;">
+										<td class="info" style="width: 100%;">
+											<h4>choose a friend!</h4>
+										</td>
+									</tr>
+								</thead>
+								<tbody id="friendTableBody">
+									<tr id="addFriend">
+										<td style="width: 100%;">
+											<button type="button" class="btn btn-warning" data-dismiss="modal" data-toggle="modal" data-target="#addFriendModal">Add Friend</button>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+
+
+						</td>
+						<td style="width: 10%; vertical-align: top;">
+						</td>
+						<td style="width: 45%; vertical-align: top;">
+
+
+							<!-- choose a dance table -->
+
+							<table id="danceTable" class="table table-striped table-hover" style="width: 100%; text-align: center;">
+								<thead>
+									<tr style="width: 100%; padding-bottom: 10px;">
+										<td class="success" style="width: 100%;">
+											<h4>choose a dance!</h4>
+										</td>
+									</tr>
+								</thead>
+								<tbody>
+									<tr style="width: 100%;">
+										<td style="width: 100%;">
+											<h4>PE SYR</h4>
+										</td>
+									</tr>
+									<tr>
+										<td style="width: 100%;">
+											<h4>Knott SYR</h4>
+										</td>
+									</tr>
+									<tr>
+										<td style="width: 100%;">
+											<h4>Trumpet SYR</h4>
+										</td>
+									</tr>
+									<tr>
+										<td style="width: 100%;">
+											<h4>Badin SYR</h4>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</td>
+					</tr>
+				</table>
+
+			</div>
+
+		</div>
+
+
+
+		<div id="syrInfo" style="background-color: transparent; visibility: hidden; height: 0px; margin: 50px;">
+
+
+
+
+			<a id="backToChooseFriendAndDance" href="#" class="btn btn-default" style="float: right; margin: 50px;">set up someone else</a>
+
+
+			<p>setting up</p>
+			<h2 id="personBeingSetUp" style="display: inline;" class="text-info"> Jared </h2>
+			<p>for the</p>
+
+			<div id="dance_description" style="
+				height: 120px;
+				">
+				<h2 id="dance" class="text-primary">Trumpet SYR</h2>	
+				<h6 class="text-success">Saturday, November 5th</h6>	
+				<h6 class="text-success">1011 Cedar Street</h6>	
+			</div>
+
+			<hr>
+
+			<center>
+				<h4 style="display: inline; margin-right: 20px">Show me:</h4>
+				<label class="checkbox-inline">
+					<input type="checkbox" checked data-toggle="toggle"> Males
+				</label>
+				<label class="checkbox-inline">
+					<input type="checkbox" data-toggle="toggle"> Females
+				</label>
+			</center>
+
+			<hr>
+
+
+			<div id="wrapper" style="text-align: center">
+
+				<div style="height:20px">
+				</div>
+
+
+
+				<div id="nay" class="yayNay" style="float: left;">
+					<h1 style="display:table-cell; vertical-align:middle">Nay</h1>
+				</div>
+
+				<div style="display: inline-block; max-width: 350px; background-color: #0f0f0f; border: 5px solid #1e1e1e; border-radius: 20px; padding: 20px;">
+
+					<center>
+						<img src="media/maryPic.jpg" height=200 width=200 style="border-radius: 50%;">
+						<h3 id="candidateName" class="text-info">Mary Connolly</h3>
+						<h6 class="text-success"><span id="candidateDorm">PE</span> - <span id="candidateHometown">Baltimore, MD</span></h6>
+						<!--
+						<h6 class="text-success">Baltimore, MD</h6>
+						<h6 class="text-success">class of 2017</h6>-->
+						<h6 class="text-success"><span id="candidateMajor">computer science</span> - <span id="candidateYear">class of 2017</span></h6>
+					</center>
+
+					<br>			
+
+					<p id="candidateBio" class="text-muted" style="text-align: left;">
+					Alohamora wand elf parchment, Wingardium Leviosa hippogriff, house dementors betrayal. Holly, Snape centaur portkey ghost Hermione spell bezoar Scabbers. Peruvian-Night.</p>
+				</div>
+
+				<div id="yay" class="yayNay" style="float: right;">
+					<h1 style="display:table-cell; vertical-align:middle">Yay</h1>
+				</div>
+
+			</div>
+
+
+		</div>
+
+
+
+		<!-- my own matches -->
+		<div id="myMatches" style="padding: 40px;">
+
+			<h2 class="text-primary">My Matches</h2>
+			<br>
+			<br>
+
+			<table id="myMatchesTable" class="table table-striped table-hover" style="text-align: left;">
+				<thead>
+					<tr style="padding-bottom: 10px;">
+						<td class="success">
+							<h4>Trumpet SYR</h4>
+						</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td style="width: 25%;">
+							<h5>Josh Erickson</h5>
+						</td>
+						<td style="width: 25%;">
+							<h5>Dillon Hall</h5>
+						</td>
+						<td style="width: 25%;">
+							<h5>jeric8@nd.edu</h5>
+						</td>
+						<td style="width: 25%;">
+							<h5>Santa Monica, CA</h5>
+						</td>
+					</tr>
+					<tr>
+						<td style="width: 25%;">
+							<h5>Josh Erickson</h5>
+						</td>
+						<td style="width: 25%;">
+							<h5>Dillon Hall</h5>
+						</td>
+						<td style="width: 25%;">
+							<h5>jeric8@nd.edu</h5>
+						</td>
+						<td style="width: 25%;">
+							<h5>Santa Monica, CA</h5>
+						</td>
+					</tr>
+					<tr>
+						<td style="width: 25%;">
+							<h5>Josh Erickson</h5>
+						</td>
+						<td style="width: 25%;">
+							<h5>Dillon Hall</h5>
+						</td>
+						<td style="width: 25%;">
+							<h5>jeric8@nd.edu</h5>
+						</td>
+						<td style="width: 25%;">
+							<h5>Santa Monica, CA</h5>
+						</td>
+					</tr>
+				</tbody>
+				<thead>
+					<tr style="padding-bottom: 10px;">
+						<td class="success">
+							<h4>Dillon SYR</h4>
+						</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td style="width: 25%;">
+							<h5>Josh Erickson</h5>
+						</td>
+						<td style="width: 25%;">
+							<h5>Dillon Hall</h5>
+						</td>
+						<td style="width: 25%;">
+							<h5>jeric8@nd.edu</h5>
+						</td>
+						<td style="width: 25%;">
+							<h5>Santa Monica, CA</h5>
+						</td>
+					</tr>
+					<tr>
+						<td style="width: 25%;">
+							<h5>Josh Erickson</h5>
+						</td>
+						<td style="width: 25%;">
+							<h5>Dillon Hall</h5>
+						</td>
+						<td style="width: 25%;">
+							<h5>jeric8@nd.edu</h5>
+						</td>
+						<td style="width: 25%;">
+							<h5>Santa Monica, CA</h5>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
+		</div>
+
+
+
+
+
+
+		<!-- my friends' matches that I set up -->
+		<div id="myFriendsMatches" style="padding: 40px;">
+
+			<h2 class="text-primary">My Friends' Matches</h2>
+			<br>
+			<br>
+
+			<table id="myMatchesTable" class="table table-striped table-hover" style="text-align: left;">
+				<thead>
+					<tr style="padding-bottom: 10px;">
+						<td class="success">
+							<h4>Trumpet SYR</h4>
+						</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td style="width: 25%;">
+							<h5 class="text-muted">Michelle Langlois</h5>
+						</td>
+						<td style="width: 25%;">
+							<h5>Josh Erickson</h5>
+						</td>
+						<td style="width: 25%;">
+							<h5>Dillon Hall</h5>
+						</td>
+						<td style="width: 25%;">
+							<h5>jeric8@nd.edu</h5>
+						</td>
+					</tr>
+					<tr>
+						<td style="width: 25%;">
+							<h5 class="text-muted">Michelle Langlois</h5>
+						</td>
+						<td style="width: 25%;">
+							<h5>Mark Howard</h5>
+						</td>
+						<td style="width: 25%;">
+							<h5>Dillon Hall</h5>
+						</td>
+						<td style="width: 25%;">
+							<h5>jeric8@nd.edu</h5>
+						</td>
+					</tr>
+					<tr>
+						<td style="width: 25%;">
+							<h5 class="text-muted">Alex Viegut</h5>
+						</td>
+						<td style="width: 25%;">
+							<h5>Kevin Lilly</h5>
+						</td>
+						<td style="width: 25%;">
+							<h5>Dillon Hall</h5>
+						</td>
+						<td style="width: 25%;">
+							<h5>jeric8@nd.edu</h5>
+						</td>
+					</tr>
+				</tbody>
+				<thead>
+					<tr style="padding-bottom: 10px;">
+						<td class="success">
+							<h4>Dillon SYR</h4>
+						</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td style="width: 25%;">
+							<h5 class="text-muted">Sara Schunck</h5>
+						</td>
+						<td style="width: 25%;">
+							<h5>Josh Erickson</h5>
+						</td>
+						<td style="width: 25%;">
+							<h5>Dillon Hall</h5>
+						</td>
+						<td style="width: 25%;">
+							<h5>jeric8@nd.edu</h5>
+						</td>
+					</tr>
+					<tr>
+						<td style="width: 25%;">
+							<h5 class="text-muted">Michelle Langlois</h5>
+						</td>
+						<td style="width: 25%;">
+							<h5>Patrick O'Connor</h5>
+						</td>
+						<td style="width: 25%;">
+							<h5>Dillon Hall</h5>
+						</td>
+						<td style="width: 25%;">
+							<h5>jeric8@nd.edu</h5>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
+		</div>
+
+
+
+	</div>
+
+
+
+</body>
+</html>

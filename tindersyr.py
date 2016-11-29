@@ -239,7 +239,8 @@ class index(Resource):
 class login(Resource):
     def get(self):
         headers = {'Content-Type': 'text/html'}
-        return make_response(render_template('login.html'),200,headers)
+        #return make_response(render_template('login.html'),200,headers)
+        return make_response(render_template('madelyn/index.html'), 200, headers)
 
     def post(self):
         try:

@@ -1,0 +1,18 @@
+.highlight { background-color: #42aaf4!important; }
+
+.yayNay {
+	height: 150px; 
+	width: 150px; 
+	border-radius: 50%; 
+	border: 2px solid gray; 
+	text-align:center; 
+	display:table;
+}
+
+#nay:hover {
+	border: 4px solid purple; 
+}
+
+#yay:hover {
+	border: 4px solid blue; 
+}
