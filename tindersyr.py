@@ -228,7 +228,7 @@ class index(Resource):
             past_setups = get_setups(session['username'], "Not Searching")
 
             headers = {'Content-Type': 'text/html'}
-            return make_response(render_template('index.html', name=session['username'], current_setups=current_setups, past_setups=past_setups),200,headers)
+            return make_response(render_template('madelyn/init.html', name=session['username'], current_setups=current_setups, past_setups=past_setups),200,headers)
         
         except Exception as e:
             return {'error': str(e) }

@@ -1,15 +1,13 @@
 <html>
-
-
 	<head>
 		<script
 			src="https://code.jquery.com/jquery-3.1.1.min.js"
 			integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
 			crossorigin="anonymous"></script>
-		<link rel="stylesheet" type="text/css" href="css/bootswatch-cyborg.css">
-		<link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='bootswatch-cyborg.css')}}">
+        <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='style.css')}}">
 		<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
-		<script src="js/friendDanceTable.js"></script>
+        <script src="{{url_for('static', filename='friendDanceTable.js')}}"></script>
 		<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 		<title>tiNDer - the SYR edition</title>
@@ -31,7 +29,7 @@
 				<li><a href="index.html">logout</a></li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
-				<li><a href="#"><img height=20px width=20px src="media/jaredPic.jpg" style="border-radius: 50%;"></a> </li>
+                <li><a href="#"><img height=20px width=20px src="{{url_for('static', filename='jaredPic.jpg')}}" style="border-radius: 50%;"></a> </li>
 				<li><a href="#">Hi, <span id="userName">Paul</span>!</a></li> 
 			</ul>
 		</div>
@@ -389,7 +387,7 @@
 				<div style="display: inline-block; max-width: 350px; background-color: #0f0f0f; border: 5px solid #1e1e1e; border-radius: 20px; padding: 20px;">
 
 					<center>
-						<img src="media/maryPic.jpg" height=200 width=200 style="border-radius: 50%;">
+                        <img src="{{url_for('static', filename='maryPic.jpg')}}" height=200 width=200 style="border-radius: 50%;">
 						<h3 id="candidateName" class="text-info">Mary Connolly</h3>
 						<h6 class="text-success"><span id="candidateDorm">PE</span> - <span id="candidateHometown">Baltimore, MD</span></h6>
 						<!--
