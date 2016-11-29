@@ -72,10 +72,6 @@ def get_setups(netid, status):
     return setups
 
 class signup(Resource):
-    def get(self):
-        headers = {'Content-Type': 'text/html'}
-        return make_response(render_template('signup.html'),200,headers)
-
     def post(self):
         try:
             parser = reqparse.RequestParser()
@@ -105,6 +101,7 @@ class signup(Resource):
 
             conn.commit()
             conn.close()
+            session['username'] = n_netid
             return redirect(url_for('index'))
 
         except Exception as e:

@@ -4,6 +4,7 @@
     <link rel="stylesheet" type="text/css" href=" {{ url_for('static', filename='bootswatch-cyborg.css') }} ">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="{{url_for('static', filename='set_hidden_inputs.js')}}"></script>
 		<title>tiNDer - the SYR edition</title>
 	</head>
     <body background="{{ url_for('static', filename='background2.jpg') }}" style="
@@ -51,7 +52,7 @@
                                 <input class="form-control" name="passwordInput" type="password">
                             </div>
                             <div class="modal-footer">
-                                <input type="submit" value="Submit" class="btn btn-default"/>
+                                <input type="submit" value="Submit" class="btn btn-primary"/>
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                             </div>
                         </form>
@@ -60,113 +61,128 @@
 				</div>
 			</div>
 
-			<!-- Sign Up Modal 1 -->
-			<div id="signUpModal" class="modal fade" role="dialog">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal">&times;</button>
-							<h4 class="modal-title">Basic Info</h4>
-						</div>
-						<div class="modal-body">
-							<label class="control-label" for="nameInput">Name:</label>
-							<input class="form-control" id="nameInput" type="text">
-							<br>
-							<label class="control-label" for="netIDInput">NetID:</label>
-							<input class="form-control" id="netIDInput" type="text">
-							<br>
-							<label class="control-label" for="passwordInput">Password:</label>
-							<input class="form-control" id="passwordInput" type="password">
-							<br>
-							<label class="control-label" for="proPic">Upload Profile Pic:</label>
-							<input type="file" name="file" id="proPic">
-							<br>
-							<div class="form-group">
-								<label for="sel1">Dorm (must be ND):</label>
-								<select class="form-control" id="sel1">
-									<option>Alumni</option>
-									<option>Badin</option>
-									<option>BP</option>
-									<option>Carroll</option>
-									<option>Cav</option>
-									<option>Dillon</option>
-									<option>Duncan</option>
-									<option>Dunne</option>
-									<option>Farley</option>
-									<option>Fisher</option>
-									<option>Flaherty</option>
-									<option>Howard</option>
-									<option>Keenan</option>
-									<option>Knott</option>
-									<option>Lewis</option>
-									<option>Lyons</option>
-									<option>McGlinn</option>
-									<option>Morrissey</option>
-									<option>Old College</option>
-									<option>O'Neill</option>
-									<option>Pangborn</option>
-									<option>PE</option>
-									<option>PDub</option>
-									<option>Ryan</option>
-									<option>Sted's</option>
-									<option>Siegfried</option>
-									<option>Sorin</option>
-									<option>Walsh</option>
-									<option>Welsh Fam</option>
-									<option>Zahm</option>
-								</select>
-							</div>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-							<button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#signUpModal2">Next</button>
-						</div>
-					</div>
-				</div>
-			</div>
+            <!-- <form method="post" action="{{ url_for('signup')}}" > -->
+                <!-- Sign Up Modal 1 -->
+                <div id="signUpModal" class="modal fade" role="dialog">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">Basic Info</h4>
+                            </div>
+                            <div class="modal-body">
+                                <label class="control-label" for="name">Name:</label>
+                                <input class="form-control" name="name" id="name_first" type="text">
+                                <br>
+                                <label class="control-label" for="netid">NetID:</label>
+                                <input class="form-control" name="netid" id="netid_first" type="text">
+                                <br>
+                                <label class="control-label" for="passwordInput">Password:</label>
+                                <input class="form-control" id="passwordInput" type="password">
+                                <br>
+                                <label class="control-label" for="proPic">Upload Profile Pic:</label>
+                                <input type="file" name="file" id="proPic">
+                                <br>
+                                <div class="form-group">
+                                    <label for="dorm">Dorm (must be ND):</label>
+                                    <select class="form-control" name="dorm" id="dorm_first">
+                                        <option>Alumni</option>
+                                        <option>Badin</option>
+                                        <option>BP</option>
+                                        <option>Carroll</option>
+                                        <option>Cav</option>
+                                        <option>Dillon</option>
+                                        <option>Duncan</option>
+                                        <option>Dunne</option>
+                                        <option>Farley</option>
+                                        <option>Fisher</option>
+                                        <option>Flaherty</option>
+                                        <option>Howard</option>
+                                        <option>Keenan</option>
+                                        <option>Knott</option>
+                                        <option>Lewis</option>
+                                        <option>Lyons</option>
+                                        <option>McGlinn</option>
+                                        <option>Morrissey</option>
+                                        <option>Old College</option>
+                                        <option>O'Neill</option>
+                                        <option>Pangborn</option>
+                                        <option>PE</option>
+                                        <option>PDub</option>
+                                        <option>Ryan</option>
+                                        <option>Sted's</option>
+                                        <option>Siegfried</option>
+                                        <option>Sorin</option>
+                                        <option>Walsh</option>
+                                        <option>Welsh Fam</option>
+                                        <option>Zahm</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#signUpModal2" onclick="set_hidden_inputs();">Next</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-			<!-- Sign Up Modal 2 -->
-			<div id="signUpModal2" class="modal fade" role="dialog">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal">&times;</button>
-							<h4 class="modal-title">Great! Now tell us a little bit about yourself</h4>
-						</div>
-						<div class="modal-body">
-							<label class="control-label" for="nameInput">Bio:</label>
-							<input class="form-control input-lg" id="nameInput" type="text">
-							<br>
-							<label class="control-label" for="netIDInput">Hometown:</label>
-							<input class="form-control" id="netIDInput" type="text">
-							<br>
-							<div class="form-group">
-								<label for="sel1">Gender:</label>
-								<select class="form-control" id="sel1">
-									<option>Male</option>
-									<option>Female</option>
-								</select>
-							</div>
-							<label class="control-label" for="majorInput">Major(s):</label>
-							<input class="form-control" id="majorInput" type="text">
-							<br>
-							<div class="form-group">
-								<label for="sel1">Graduation Year:</label>
-								<select class="form-control" id="sel1">
-									<option>Senior - 2017</option>
-									<option>Junior - 2018</option>
-									<option>Sophomore - 2019</option>
-									<option>Freshman - 2020</option>
-								</select>
-							</div>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-							<button type="button" class="btn btn-primary" data-dismiss="modal">Okay, I'm ready to start!</button>
-						</div>
-					</div>
-				</div>
-			</div>
+                <!-- Sign Up Modal 2 -->
+                <div id="signUpModal2" class="modal fade" role="dialog">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">Great! Now tell us a little bit about yourself</h4>
+                            </div>
+                            <form method="post" action="{{ url_for('signup') }}">
+                                <input type="hidden" name="name" id="name"/>
+                                <input type="hidden" name="netid" id="netid"/>
+                                <input type="hidden" name="dorm" id="dorm"/>
+                                <div class="modal-body">
+                                    <label class="control-label" for="bio">Bio:</label>
+                                    <input class="form-control input-lg" name="bio" type="text">
+                                    <br>
+                                    <label class="control-label" for="hometown">Hometown:</label>
+                                    <input class="form-control" name="hometown" type="text">
+                                    <br>
+                                    <div class="form-group">
+                                        <label for="gender">Gender:</label>
+                                        <select class="form-control" name="gender">
+                                            <option>Male</option>
+                                            <option>Female</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="interested_in">Interested in:</label>
+                                        <select class="form-control" name="interested_in">
+                                            <option>Male</option>
+                                            <option>Female</option>
+                                            <option>Both</option>
+                                        </select>
+                                    </div>
+                                    <label class="control-label" for="major">Major(s):</label>
+                                    <input class="form-control" name="major" type="text">
+                                    <br>
+                                    <div class="form-group">
+                                        <label for="year">Graduation Year:<label>
+                                        <select class="form-control" name="year">
+                                            <option>2017</option>
+                                            <option>2018</option>
+                                            <option>2019</option>
+                                            <option>2020</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <input type="submit" class="btn btn-primary" value="Okay, I'm ready to start!"/>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- </form> -->
 
 			<center>	
 				<!-- Log In -->
