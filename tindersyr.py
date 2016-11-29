@@ -29,6 +29,43 @@ app.config['SECRET_KEY'] = 'this should be changed'
 
 mysql.init_app(app)
 
+def get_events():
+
+    conn = mysql.connect()
+    cursor = conn.cursor()
+    cursor.execute("SELECT name from event;")
+
+    data = cursor.fetchall()
+
+    events = []
+    for e in data:
+        events.append(e[0])
+
+    conn.commit()
+    conn.close()
+
+    return events
+
+def get_friends_query(netid):
+    conn = mysql.connect()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT friend FROM friends WHERE netid = '{}'".format(session['username']))
+
+    data = cursor.fetchall()
+    
+    friends = []
+    for f in data:
+        cursor.execute("SELECT name FROM users WHERE netid = '{}'".format(f[0]))
+        data = cursor.fetchall()
+        if len(data) > 0:
+            friends.append(Friend(f[0], data[0][0]))
+
+    conn.commit()
+    conn.close()
+
+    return friends
+
 #gets list of matches for netid
 #member is a boolean value
 def get_matches_query(attendee, setter_upper, event, member):
@@ -233,12 +270,12 @@ class index(Resource):
             
                 current_setups = get_setups(session['username'], "Searching")
                 past_setups = get_setups(session['username'], "Not Searching")
+                friends = get_friends_query(session['username'])
+                events = get_events()
 
                 headers = {'Content-Type': 'text/html'}
 
-                print name
-
-                return make_response(render_template('madelyn/init.html', name=name, current_setups=current_setups, past_setups=past_setups),200,headers)
+                return make_response(render_template('madelyn/init.html', name=name, events=events, friends=friends, current_setups=current_setups, past_setups=past_setups),200,headers)
             else:
                 return redirect(url_for('login'))
         

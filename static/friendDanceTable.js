@@ -3,32 +3,6 @@
 var chosenFriend = '-1';
 var chosenDance = '-1';
 
-var usersFriends = {
-	"names":[
-		{"name":"Jack"}, 
-		{"name":"Paul"},
-		{"name":"Madelyn"}, 
-		{"name":"Anna"},
-		{"name":"Peter"}
-	]
-};
-
-/*var userProfile = {
-	"userInfo": [
-		{
-			"name": "Paul Dowling",
-			"netID": "pdowlin8",
-			"hometown": "Chicago, IL",
-			"major": "computer science",
-			"dorm": "Duncan",
-			"year": "2017",
-			"sex": "Male",
-			"bio": "I love coding all the time. It's all I do! And I like cars."
-		}
-
-	]
-};*/
-
 var candidates = {
 	"candidates": [
 		{
@@ -62,7 +36,7 @@ $.makeRow = function (content) {
 };
 
 
-$.displayFriends = function (mydata) {
+/*$.displayFriends = function (mydata) {
 	$.each(mydata, function (index, val) {
 		$.each(val, function (index, blah) {
 			$.each(blah, function (index, name) {
@@ -72,7 +46,7 @@ $.displayFriends = function (mydata) {
 			});
 		});
 	});
-};
+};*/
 
 $.getCandidates = function(personBeingSetUp, dance) {
 	// call database with that info, get the following json back
@@ -141,8 +115,8 @@ $( document ).ready(function() {
 
 
 	// initialize
-	var mydata = eval(usersFriends);
-	$.displayFriends(mydata);
+	//var mydata = eval(usersFriends);
+	//$.displayFriends(mydata);
 	
 	$("#userNetID").text(userProfile["userInfo"][0]["netID"]);
 	$("#userName").text(userProfile["userInfo"][0]["name"]);

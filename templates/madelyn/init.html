@@ -287,6 +287,16 @@
 											<button type="button" class="btn btn-warning" data-dismiss="modal" data-toggle="modal" data-target="#addFriendModal">Add Friend</button>
 										</td>
 									</tr>
+
+                                    {% for f in friends %}
+                                    <tr>
+                                        <td style="width: 100%;">
+                                            <input type="radio" name="attendee_netid" value="{{f.netid}}">
+                                                {{f.name}}
+                                            </input>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
 								</tbody>
 							</table>
 
@@ -303,31 +313,18 @@
 								<thead>
 									<tr style="width: 100%; padding-bottom: 10px;">
 										<td class="success" style="width: 100%;">
-											<h4>choose a dance!</h4>
+											<h4>choose an event!</h4>
 										</td>
 									</tr>
 								</thead>
 								<tbody>
-									<tr style="width: 100%;">
-										<td style="width: 100%;">
-											<h4>PE SYR</h4>
-										</td>
-									</tr>
-									<tr>
-										<td style="width: 100%;">
-											<h4>Knott SYR</h4>
-										</td>
-									</tr>
-									<tr>
-										<td style="width: 100%;">
-											<h4>Trumpet SYR</h4>
-										</td>
-									</tr>
-									<tr>
-										<td style="width: 100%;">
-											<h4>Badin SYR</h4>
-										</td>
-									</tr>
+                                    {% for e in events %}
+                                        <tr style="width: 100%;">
+                                            <td style="width: 100%">
+                                                <input type="radio" name="event" value="{{e}}">{{e}}</input>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
 								</tbody>
 							</table>
 						</td>
