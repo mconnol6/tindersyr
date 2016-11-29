@@ -13,7 +13,7 @@ var usersFriends = {
 	]
 };
 
-var userProfile = {
+/*var userProfile = {
 	"userInfo": [
 		{
 			"name": "Paul Dowling",
@@ -27,7 +27,7 @@ var userProfile = {
 		}
 
 	]
-};
+};*/
 
 var candidates = {
 	"candidates": [

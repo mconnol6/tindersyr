@@ -223,12 +223,24 @@ class index(Resource):
 
             conn = mysql.connect()
             cursor = conn.cursor()
-            
-            current_setups = get_setups(session['username'], "Searching")
-            past_setups = get_setups(session['username'], "Not Searching")
+            cursor.execute("SELECT name from users where netid='{}';".format(session['username']))
+            data = cursor.fetchall()
+            conn.commit()
+            conn.close()
 
-            headers = {'Content-Type': 'text/html'}
-            return make_response(render_template('madelyn/init.html', name=session['username'], current_setups=current_setups, past_setups=past_setups),200,headers)
+            if (len(data) != 0):
+                name = data[0][0]
+            
+                current_setups = get_setups(session['username'], "Searching")
+                past_setups = get_setups(session['username'], "Not Searching")
+
+                headers = {'Content-Type': 'text/html'}
+
+                print name
+
+                return make_response(render_template('madelyn/init.html', name=name, current_setups=current_setups, past_setups=past_setups),200,headers)
+            else:
+                return redirect(url_for('login'))
         
         except Exception as e:
             return {'error': str(e) }
