@@ -16,6 +16,16 @@ class Friend:
         self.name = name
         self.netid = netid
 
+class Match:
+    #other_netid is either the person who set you up or the netid of the person you set up,
+    #depending on what kind of Match it is
+    def __init__(self, match_netid, match_name, event, other_name, dorm):
+        self.match_netid = match_netid
+        self.match_name = match_name
+        self.event = event
+        self.other_name = other_name
+        self.dorm = dorm
+
 mysql = MySQL()
 app = Flask(__name__)
 api = Api(app)
@@ -28,6 +38,74 @@ app.config['MYSQL_DATABASE_PORT'] = 3306
 app.config['SECRET_KEY'] = 'this should be changed'
 
 mysql.init_app(app)
+
+def get_my_matches(netid):
+
+    conn = mysql.connect()
+    cursor = conn.cursor()
+    
+    #member attendances
+    cursor.execute("SELECT nonmem_attendee, event_name, mem_setter_upper from potential_matches where mem_attendee='{}' and member_status='Yes' and nonmember_status = 'Yes' order by event_name".format(netid))
+
+    data = cursor.fetchall()
+
+    matches = []
+
+    for m in data:
+        #get name and dorm of match
+        cursor.execute("SELECT name, dorm from users where netid='{}'".format(m[0]))
+        d2 = cursor.fetchall()
+
+        #get name of setter_upper
+        cursor.execute("SELECT name from users where netid='{}'".format(m[2]))
+        d3 = cursor.fetchall()
+
+        match_name = ""
+        setter_upper = ""
+        dorm = ""
+
+        if len(d2) != 0:
+            match_name = d2[0][0]
+            dorm = d2[0][1]
+
+        if len(d3) != 0:
+            setter_upper = d3[0][0]
+
+        match = Match(m[0], match_name, m[1], setter_upper, dorm)
+        matches.append(match)
+    
+    #nonmember attendances
+    cursor.execute("SELECT mem_attendee, event_name nonmem_setter_upper from potential_matches where nonmem_attendee='{}' and member_status='Yes' and nonmember_status = 'Yes' order by event_name".format(netid))
+
+    data = cursor.fetchall()
+    
+    for m in data:
+        #get name and dorm of match
+        cursor.execute("SELECT name, dorm from users where netid='{}'".format(m[0]))
+        d2 = cursor.fetchall()
+
+        #get name of setter_upper
+        cursor.execute("SELECT name from users where netid='{}'".format(m[2]))
+        d3 = cursor.fetchall()
+
+        match_name = ""
+        setter_upper = ""
+        dorm = ""
+
+        if len(d2) != 0:
+            match_name = d2[0][0]
+            dorm = d2[0][1]
+
+        if len(d3) != 0:
+            setter_upper = d3[0][0]
+
+        match = Match(m[0], match_name, m[1], setter_upper)
+        matches.append(match)
+
+    conn.commit()
+    conn.close()
+
+    return matches
 
 def get_events():
 
@@ -272,10 +350,23 @@ class index(Resource):
                 past_setups = get_setups(session['username'], "Not Searching")
                 friends = get_friends_query(session['username'])
                 events = get_events()
+                my_matches = get_my_matches(session['username'])
+
+                my_event_matches = {}
+                for match in my_matches:
+                    if match.event not in my_event_matches:
+                        my_event_matches[match.event] = []
+
+                    my_event_matches[match.event].append(match)
+
+                print my_event_matches
+
+                for event in my_event_matches:
+                    print event
+                    print my_event_matches[event]
 
                 headers = {'Content-Type': 'text/html'}
-
-                return make_response(render_template('madelyn/init.html', name=name, events=events, friends=friends, current_setups=current_setups, past_setups=past_setups),200,headers)
+                return make_response(render_template('madelyn/init.html', name=name, events=events, friends=friends, my_event_matches=my_event_matches, current_setups=current_setups, past_setups=past_setups),200,headers)
             else:
                 return redirect(url_for('login'))
         
