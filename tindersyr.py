@@ -150,6 +150,15 @@ def get_matches_query(attendee, setter_upper, event, member):
         conn = mysql.connect()
         cursor = conn.cursor()
 
+        #get name of attendee
+        cursor.execute("SELECT name FROM users WHERE netid='{}'".format(attendee))
+        data = cursor.fetchall()
+
+        if len(data) == 0:
+            return []
+
+        attendee_name = data[0][0]
+
         if (member == "1"):
             sql_stmt = "SELECT nonmem_attendee FROM potential_matches WHERE mem_attendee='{}' and mem_setter_upper='{}' and event_name='{}' and member_status= 'Yes' and nonmember_status='Yes'".format(attendee, setter_upper, event)
         else:
@@ -160,11 +169,17 @@ def get_matches_query(attendee, setter_upper, event, member):
         data = cursor.fetchall()
         matches = []
         for m in data:
-            cursor.execute("SELECT name FROM users WHERE netid='{}'".format(m[0]))
+            name = ""
+            dorm = ""
+
+            cursor.execute("SELECT name, dorm FROM users WHERE netid='{}'".format(m[0]))
             d2 = cursor.fetchall()
             if len(d2) != 0:
-                friend = Friend(m[0], d2[0][0])
-                matches.append(friend)
+                name = d2[0][0]
+                dorm = d2[0][1]
+            
+            match = Match(m[0], name, event, attendee_name, dorm)
+            matches.append(match)
 
         conn.commit()
         conn.close()
@@ -352,6 +367,22 @@ class index(Resource):
                 events = get_events()
                 my_matches = get_my_matches(session['username'])
 
+                friend_matches = []
+
+                #get matches for each setup
+                for s in current_setups:
+                    #get matches for this setup
+                    matches = get_matches_query(s.attendee, s.setter_upper, s.event_name, s.member)
+                    for m in matches:
+                        friend_matches.append(m)
+
+                friend_event_matches = {}
+                for match in friend_matches:
+                    if match.event not in friend_event_matches:
+                        friend_event_matches[match.event] = []
+
+                    friend_event_matches[match.event].append(match)
+
                 my_event_matches = {}
                 for match in my_matches:
                     if match.event not in my_event_matches:
@@ -359,14 +390,8 @@ class index(Resource):
 
                     my_event_matches[match.event].append(match)
 
-                print my_event_matches
-
-                for event in my_event_matches:
-                    print event
-                    print my_event_matches[event]
-
                 headers = {'Content-Type': 'text/html'}
-                return make_response(render_template('madelyn/init.html', name=name, events=events, friends=friends, my_event_matches=my_event_matches, current_setups=current_setups, past_setups=past_setups),200,headers)
+                return make_response(render_template('madelyn/init.html', name=name, events=events, friends=friends, friend_event_matches = friend_event_matches, my_event_matches=my_event_matches, current_setups=current_setups, past_setups=past_setups),200,headers)
             else:
                 return redirect(url_for('login'))
         
