@@ -272,7 +272,7 @@ class add_friend(Resource):
 
             conn.commit()
             conn.close()
-            return redirect(url_for('create_setup'))
+            return redirect(url_for('index'))
 
         except Exception as e:
             return {'error' : str(e)}
