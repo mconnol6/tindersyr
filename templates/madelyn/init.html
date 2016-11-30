@@ -57,6 +57,27 @@
 		</div>
 
 
+		<!-- Find Friend Modal -->
+		<div id="findFriendModal" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title">Find a Friend</h4>
+					</div>
+					<div class="modal-body">
+						<label class="control-label" for="friendNetID">NetID:</label>
+						<input class="form-control" id="findFriendNetID" type="text">
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+						<button id="findFriendSave" type="button" class="btn btn-primary" data-dismiss="modal">Search</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+
 
 		<!-- Add Friend Modal -->
 		<div id="addFriendModal" class="modal fade" role="dialog">
@@ -284,6 +305,7 @@
 								<tbody id="friendTableBody">
 									<tr id="addFriend">
 										<td style="width: 100%;">
+											<button type="button" class="btn btn-success" data-dismiss="modal" data-toggle="modal" data-target="#findFriendModal">Find Friend</button>
 											<button type="button" class="btn btn-warning" data-dismiss="modal" data-toggle="modal" data-target="#addFriendModal">Add Friend</button>
 										</td>
 									</tr>
