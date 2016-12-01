@@ -26,6 +26,19 @@ class Match:
         self.other_name = other_name
         self.dorm = dorm
 
+class User:
+    def __init__(self, netid, name, year, bio, hometown, gender, interested_in, dorm, major):
+        self.netid = netid
+        self.name = name
+        self.year = year
+        self.bio = bio
+        self.hometown = hometown
+        self.gender = gender
+        self.interested_in = interested_in
+        self.dorm = dorm
+        self.major = major
+
+
 mysql = MySQL()
 app = Flask(__name__)
 api = Api(app)
@@ -39,6 +52,29 @@ app.config['SECRET_KEY'] = 'this should be changed'
 
 mysql.init_app(app)
 
+def get_user_info(netid):
+    conn = mysql.connect()
+    cursor = conn.cursor()
+    cursor.callproc('GetUser', (netid,))
+    data = cursor.fetchall()
+
+    user = data[0]
+    
+    name = user[1]
+    year = user[2]
+    bio = user[3]
+    hometown = user[4]
+    gender = user[5]
+    interested_in = user[6]
+    dorm = user[9]
+    major = user[10]
+
+    u = User(netid, name, year, bio, hometown, gender, interested_in, dorm, major)
+
+    conn.commit()
+    conn.close()
+    return u
+    
 def get_my_matches(netid):
 
     conn = mysql.connect()
@@ -330,36 +366,6 @@ class add_friend(Resource):
             return {'error' : str(e)}
 
 class edit_user(Resource):
-    def get(self):
-        if 'username' not in session:
-            return redirect(url_for('login'))
-        try:
-            conn = mysql.connect()
-            cursor = conn.cursor()
-            cursor.callproc('GetUser', (session['username'],))
-            data = cursor.fetchall()
-
-            user = data[0]
-            
-            name = user[1]
-            year = user[2]
-            bio = user[3]
-            hometown = user[4]
-            gender = user[5]
-            interested_in = user[6]
-            number = user[7]
-            dorm = user[9]
-            major = user[10]
-
-            conn.commit()
-            conn.close()
-            
-            headers = {'Content-Type': 'text/html'}
-            return make_response(render_template('edit_user.html', netid=session['username'], name=name, year=year, bio=bio, hometown=hometown, gender=gender, interested_in=interested_in, number=number, dorm=dorm, major=major),200,headers)
-
-        except Exception as e:
-            return {'error' : str(e)}
-
     def post(self):
         try:
             parser = reqparse.RequestParser()
@@ -369,7 +375,6 @@ class edit_user(Resource):
             parser.add_argument('hometown', type=str)
             parser.add_argument('gender', type=str)
             parser.add_argument('interested_in', type=str)
-            parser.add_argument('number', type=str)
             parser.add_argument('major', type=str)
             parser.add_argument('dorm', type=str)
             args = parser.parse_args()
@@ -381,13 +386,13 @@ class edit_user(Resource):
             n_hometown = args['hometown']
             n_gender = args['gender']
             n_interested_in = args['interested_in']
-            n_number = args['number']
             n_major = args['major']
             n_dorm = args['dorm']
+            n_number = ""
 
             conn = mysql.connect()
             cursor = conn.cursor()
-            cursor.callproc('UpdateUser', (n_netid, n_name, n_year, n_bio, n_hometown, n_gender, n_interested_in, n_number, n_major, n_dorm,))
+            cursor.callproc('UpdateUser', (n_netid, n_name, n_year, n_bio, n_hometown, n_gender, n_interested_in, n_number, n_dorm, n_major,))
             data = cursor.fetchall()
 
             conn.commit()
@@ -414,10 +419,11 @@ class index(Resource):
                 name = data[0][0]
             
                 current_setups = get_setups(session['username'], "Searching")
-                past_setups = get_setups(session['username'], "Not Searching")
+                #past_setups = get_setups(session['username'], "Not Searching")
                 friends = get_friends_query(session['username'])
                 events = get_events()
                 my_matches = get_my_matches(session['username'])
+                user = get_user_info(session['username'])
 
                 friend_matches = []
 
@@ -443,7 +449,7 @@ class index(Resource):
                     my_event_matches[match.event].append(match)
 
                 headers = {'Content-Type': 'text/html'}
-                return make_response(render_template('madelyn/init.html', name=name, events=events, friends=friends, friend_event_matches = friend_event_matches, my_event_matches=my_event_matches, current_setups=current_setups, past_setups=past_setups),200,headers)
+                return make_response(render_template('madelyn/init.html', name=name, events=events, friends=friends, friend_event_matches = friend_event_matches, my_event_matches=my_event_matches, user=user),200,headers)
             else:
                 return redirect(url_for('login'))
         

@@ -7,7 +7,7 @@
         <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='bootswatch-cyborg.css')}}">
         <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='style.css')}}">
 		<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
-        <script src="{{url_for('static', filename='friendDanceTable.js')}}"></script>
+        <!-- <script src="{{url_for('static', filename='friendDanceTable.js')}}"></script> -->
 		<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 		<title>tiNDer - the SYR edition</title>
@@ -112,6 +112,104 @@
                                 <select class="form-control" id="friendDorm" name="dorm">
                                     <option selected="selected">Alumni</option>
                                     <option>Badin</option>
+                                    <option>Breen-Phillips</option>
+                                    <option>Carroll</option>
+                                    <option>Cavanaugh</option>
+                                    <option>Dillon</option>
+                                    <option>Duncan</option>
+                                    <option>Dunne</option>
+                                    <option>Farley</option>
+                                    <option>Fisher</option>
+                                    <option>Flaherty</option>
+                                    <option>Howard</option>
+                                    <option>Keenan</option>
+                                    <option>Knott</option>
+                                    <option>Lewis</option>
+                                    <option>Lyons</option>
+                                    <option>McGlinn</option>
+                                    <option>Morrissey</option>
+                                    <option>Old College</option>
+                                    <option>O'Neill</option>
+                                    <option>Pangborn</option>
+                                    <option>Pasquerilla East</option>
+                                    <option>Pasquerilla West</option>
+                                    <option>Ryan</option>
+                                    <option>St. Edward's</option>
+                                    <option>Siegfried</option>
+                                    <option>Sorin</option>
+                                    <option>Walsh</option>
+                                    <option>Welsh Family</option>
+                                    <option>Zahm</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="friendYear">Class Year:</label>
+                                <select id="friendYear" class="form-control" name="year">
+                                    <option selected="selected">2017</option>
+                                    <option>2018</option>
+                                    <option>2019</option>
+                                    <option>2020</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="friendSex">Gender:</label>
+                                <select class="form-control" id="friendSex" name="gender">
+                                    <option selected="selected">Female</option>
+                                    <option>Male</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="friendSex">Interested In:</label>
+                                <select id="friendSex" class="form-control" id="sel1" name="interested_in">
+                                    <option selected="selected">Female</option>
+                                    <option>Male</option>
+                                    <option>Both</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button id="addFriendSave" type="submit" class="btn btn-primary">Go</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </form>
+				</div>
+			</div>
+		</div>
+
+
+
+
+
+
+
+		<!-- Edit Profile Modal -->
+		<div id="editProfileModal" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title">Edit Profile</h4>
+                        <h5 id="userNetID" class="modal-title text-info"><span id="userNetID">{{user.netid}}</span></h5>
+					</div>
+                    <form method="post" action="{{ url_for('edit_user') }}">
+                        <div class="modal-body">
+                            <label class="control-label" for="netIDInput">Name:</label>
+                            <input id="editName" class="form-control" id="netIDInput" name="name" type="text" value="{{user.name}}">
+                            <br>
+                            <label class="control-label" for="netIDInput">Hometown:</label>
+                            <input id="editHometown" class="form-control" id="netIDInput" name="hometown" type="text" value="{{user.hometown}}">
+                            <br>
+                            <label class="control-label" for="netIDInput">Major:</label>
+                            <input id="editMajor" class="form-control" id="netIDInput" name="major" type="text" value="{{user.major}}">
+                            <br>
+                            <label class="control-label" for="bioInput">Bio:</label>
+                            <input id="editBio" class="form-control" id="bioInput" name="bio" type="text" value="{{user.bio}}">
+                            <br>
+                            <div class="form-group">
+                                <label for="sel1">Dorm (must be ND):</label>
+                                <select id="editDorm" class="form-control" name="dorm" id="sel1" value="{{user.dorm}}">
+                                    <option>Alumni</option>
+                                    <option>Badin</option>
                                     <option>BP</option>
                                     <option>Carroll</option>
                                     <option>Cav</option>
@@ -143,122 +241,35 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="friendYear">Class Year:</label>
-                                <select id="friendYear" class="form-control" name="year">
-                                    <option selected="selected">2017</option>
+                                <label for="editYear">Class Year:</label>
+                                <select id="editYear" class="form-control" name="year" value="{{user.year}}">
+                                    <option>2017</option>
                                     <option>2018</option>
                                     <option>2019</option>
                                     <option>2020</option>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="friendSex">Gender:</label>
-                                <select class="form-control" id="friendSex" name="gender">
-                                    <option selected="selected">Female</option>
-                                    <option>Male</option>
+                                <label for="editSex">Gender:</label>
+                                <select id="editSex" class="form-control" id="sel1" name="gender" value="{{user.gender}}">
+                                    <option value="Female">Female</option>
+                                    <option value="Male">Male</option>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="friendSex">Interested In:</label>
-                                <select id="friendSex" class="form-control" id="sel1" name="interested_in">
-                                    <option selected="selected">Female</option>
-                                    <option>Male</option>
+                                <label for="editInterestedIn">Interested In:</label>
+                                <select id="editInterestedIn" class="form-control" id="sel1" name="interested_in" value="{{user.interested_in}}">
+                                    <option value="Female">Female</option>
+                                    <option value="Male">Male</option>
+                                    <option>Both</option>
                                 </select>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button id="addFriendSave" type="submit" class="btn btn-primary">Go</button>
+                            <button id="saveProfileEdit" type="submit" class="btn btn-primary">Save</button>
                             <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                         </div>
                     </form>
-				</div>
-			</div>
-		</div>
-
-
-
-
-
-
-
-		<!-- Edit Profile Modal -->
-		<div id="editProfileModal" class="modal fade" role="dialog">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title">Edit Profile</h4>
-						<h5 id="userNetID" class="modal-title text-info"><span id="userNetID">mnelso12</span></h5>
-					</div>
-					<div class="modal-body">
-						<label class="control-label" for="netIDInput">Name:</label>
-						<input id="editName" class="form-control" id="netIDInput" type="text">
-						<br>
-						<label class="control-label" for="netIDInput">Hometown:</label>
-						<input id="editHometown" class="form-control" id="netIDInput" type="text">
-						<br>
-						<label class="control-label" for="netIDInput">Major:</label>
-						<input id="editMajor" class="form-control" id="netIDInput" type="text">
-						<br>
-						<label class="control-label" for="bioInput">Bio:</label>
-						<input id="editBio" class="form-control" id="bioInput" type="text">
-						<br>
-						<div class="form-group">
-							<label for="sel1">Dorm (must be ND):</label>
-							<select id="editDorm" class="form-control" id="sel1">
-								<option>Alumni</option>
-								<option>Badin</option>
-								<option>BP</option>
-								<option>Carroll</option>
-								<option>Cav</option>
-								<option>Dillon</option>
-								<option>Duncan</option>
-								<option>Dunne</option>
-								<option>Farley</option>
-								<option>Fisher</option>
-								<option>Flaherty</option>
-								<option>Howard</option>
-								<option>Keenan</option>
-								<option>Knott</option>
-								<option>Lewis</option>
-								<option>Lyons</option>
-								<option>McGlinn</option>
-								<option>Morrissey</option>
-								<option>Old College</option>
-								<option>O'Neill</option>
-								<option>Pangborn</option>
-								<option>PE</option>
-								<option>PDub</option>
-								<option>Ryan</option>
-								<option>Sted's</option>
-								<option>Siegfried</option>
-								<option>Sorin</option>
-								<option>Walsh</option>
-								<option>Welsh Fam</option>
-								<option>Zahm</option>
-							</select>
-						</div>
-						<div class="form-group">
-							<label for="editYear">Class Year:</label>
-							<select id="editYear" class="form-control">
-								<option>2017</option>
-								<option>2018</option>
-								<option>2019</option>
-								<option>2020</option>
-							</select>
-						</div>
-						<div class="form-group">
-							<label for="editSex">Gender:</label>
-							<select id="editSex" class="form-control" id="sel1">
-								<option>Female</option>
-								<option>Male</option>
-							</select>
-						</div>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-						<button id="saveProfileEdit" type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
-					</div>
 				</div>
 			</div>
 		</div>
@@ -475,13 +486,8 @@
                 {% endfor %}
 			</table>
 		</div>
-
-
-
-
-
-
-		<!-- my friends' matches that I set up -->
+		
+        <!-- my friends' matches that I set up -->
 		<div id="myFriendsMatches" style="padding:40px;">
 
 			<h2 class="text-primary">My Friends' Matches</h2>
@@ -520,4 +526,20 @@
 		</div>
 	</div>
 </body>
+<script>
+$("#editSex option").filter(function() {
+    //may want to use $.trim in here
+    return $(this).text() == "{{user.gender}}"; 
+}).attr('selected', true);
+
+$("#editInterestedIn option").filter(function() {
+    //may want to use $.trim in here
+    return $(this).text() == "{{user.interested_in}}"; 
+}).attr('selected', true);
+
+$("#editDorm option").filter(function() {
+    //may want to use $.trim in here
+    return $(this).text() == "{{user.dorm}}"; 
+}).attr('selected', true);
+</script>
 </html>
