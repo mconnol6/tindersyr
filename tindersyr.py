@@ -212,7 +212,52 @@ class signup(Resource):
             parser.add_argument('hometown', type=str)
             parser.add_argument('gender', type=str)
             parser.add_argument('interested_in', type=str)
+            parser.add_argument('dorm', type=str)
+            parser.add_argument('major', type=str)
+            args = parser.parse_args()
+
+            n_netid = args['netid']
+            n_name = args['name']
+            n_year = args['year']
+            n_bio = args['bio']
+            n_hometown = args['hometown']
+            n_gender = args['gender']
+            n_interested_in = args['interested_in']
+            n_dorm = args['dorm']
+            n_major = args['major']
+
+            conn = mysql.connect()
+            cursor = conn.cursor()
+            sql_stmt = "INSERT INTO users (netid, name, year, bio, hometown, gender, interested_in, robot, dorm, major) VALUES (%(netid)s, %(name)s, %(year)s, %(bio)s, %(hometown)s, %(gender)s, %(interested_in)s, %(robot)s, %(dorm)s, %(major)s);"
+
+            cursor.execute(sql_stmt, {'netid': n_netid, 'name': n_name, 'year': n_year, 'bio': n_bio, 'hometown': n_hometown, 'gender': n_gender, 'interested_in': n_interested_in, 'robot': 0, 'dorm': n_dorm, 'major': n_major });
+            data = cursor.fetchall()
+
+            conn.commit()
+            conn.close()
+            session['username'] = n_netid
+            return redirect(url_for('index'))
+
+        except Exception as e:
+            return {'error' : str(e)}
+
+class create_friend_profile(Resource):
+    def post(self):
+        if 'username' not in session:
+            return redirect(url_for('login'))
+
+        try:
+            parser = reqparse.RequestParser()
+            parser.add_argument('netid', type=str)
+            parser.add_argument('name', type=str)
+            parser.add_argument('year', type=int)
+            parser.add_argument('bio', type=str)
+            parser.add_argument('hometown', type=str)
+            parser.add_argument('gender', type=str)
+            parser.add_argument('interested_in', type=str)
             parser.add_argument('number', type=str)
+            parser.add_argument('dorm', type=str)
+            parser.add_argument('major', type=str)
             args = parser.parse_args()
 
             n_netid = args['netid']
@@ -223,15 +268,22 @@ class signup(Resource):
             n_gender = args['gender']
             n_interested_in = args['interested_in']
             n_number = args['number']
+            n_dorm = args['dorm']
+            n_major = args['major']
 
             conn = mysql.connect()
             cursor = conn.cursor()
-            cursor.callproc('AddUser', (n_netid, n_name, n_year, n_bio, n_hometown, n_gender, n_interested_in, n_number, 0))
+            sql_stmt = "INSERT INTO users (netid, name, year, bio, hometown, gender, interested_in, robot, dorm, major) VALUES (%(netid)s, %(name)s, %(year)s, %(bio)s, %(hometown)s, %(gender)s, %(interested_in)s, %(robot)s, %(dorm)s, %(major)s);"
+
+            cursor.execute(sql_stmt, {'netid': n_netid, 'name': n_name, 'year': n_year, 'bio': n_bio, 'hometown': n_hometown, 'gender': n_gender, 'interested_in': n_interested_in, 'robot': 0, 'dorm': n_dorm, 'major': n_major });
             data = cursor.fetchall()
+            
+            insert_stmt = "INSERT INTO friends VALUES ( %(netid)s, %(friend)s);"
+            cursor.execute(insert_stmt, { 'netid': session['username'], 'friend': n_netid})
 
             conn.commit()
             conn.close()
-            session['username'] = n_netid
+
             return redirect(url_for('index'))
 
         except Exception as e:
@@ -655,6 +707,7 @@ api.add_resource(update_potential_match_status, '/update_potential_match_status'
 api.add_resource(add_friend, '/add_friend')
 api.add_resource(get_matches, '/get_matches')
 api.add_resource(update_setup_status, '/update_setup_status')
+api.add_resource(create_friend_profile, '/create_friend_profile')
 
 if __name__ == '__main__':
     app.run()

@@ -89,86 +89,88 @@
 						<button type="button" class="close" data-dismiss="modal">&times;</button>
 						<h4 class="modal-title">Add a Friend</h4>
 					</div>
-					<div class="modal-body">
-						<label class="control-label" for="friendName">Name:</label>
-						<input class="form-control" id="friendName" type="text">
-						<br>
-						<label class="control-label" for="friendNetID">NetID:</label>
-						<p class="text-warning">Careful! NetID cannot be changed<p>
-						<input class="form-control" id="friendNetID" type="text">
-						<br>
-						<label class="control-label" for="friendHometown">Hometown:</label>
-						<input class="form-control" id="friendHometown" type="text">
-						<br>
-						<label class="control-label" for="friendBio">Bio:</label>
-						<input class="form-control" id="friendBio" type="text">
-						<br>
-						<label class="control-label" for="friendMajor">Major:</label>
-						<input class="form-control" id="friendMajor" type="text">
-						<br>
-						<div class="form-group">
-							<label for="friendDorm">Dorm (must be ND):</label>
-							<select class="form-control" id="friendDorm">
-								<option>Alumni</option>
-								<option>Badin</option>
-								<option>BP</option>
-								<option>Carroll</option>
-								<option>Cav</option>
-								<option>Dillon</option>
-								<option>Duncan</option>
-								<option>Dunne</option>
-								<option>Farley</option>
-								<option>Fisher</option>
-								<option>Flaherty</option>
-								<option>Howard</option>
-								<option>Keenan</option>
-								<option>Knott</option>
-								<option>Lewis</option>
-								<option>Lyons</option>
-								<option>McGlinn</option>
-								<option>Morrissey</option>
-								<option>Old College</option>
-								<option>O'Neill</option>
-								<option>Pangborn</option>
-								<option>PE</option>
-								<option>PDub</option>
-								<option>Ryan</option>
-								<option>Sted's</option>
-								<option>Siegfried</option>
-								<option>Sorin</option>
-								<option>Walsh</option>
-								<option>Welsh Fam</option>
-								<option>Zahm</option>
-							</select>
-						</div>
-						<div class="form-group">
-							<label for="friendSex">Gender:</label>
-							<select class="form-control" id="friendSex">
-								<option>Female</option>
-								<option>Male</option>
-							</select>
-						</div>
-						<div class="form-group">
-							<label for="friendYear">Class Year:</label>
-							<select id="friendYear" class="form-control">
-								<option>2017</option>
-								<option>2018</option>
-								<option>2019</option>
-								<option>2020</option>
-							</select>
-						</div>
-						<div class="form-group">
-							<label for="friendSex">Gender:</label>
-							<select id="friendSex" class="form-control" id="sel1">
-								<option>Female</option>
-								<option>Male</option>
-							</select>
-						</div>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-						<button id="addFriendSave" type="button" class="btn btn-primary" data-dismiss="modal">Go</button>
-					</div>
+                    <form method="post" action="{{ url_for('create_friend_profile') }}">
+                        <div class="modal-body">
+                            <label class="control-label" for="name">Name:</label>
+                            <input class="form-control" id="friendName" name="name" type="text">
+                            <br>
+                            <label class="control-label" for="friendNetID">NetID:</label>
+                            <p class="text-warning">Careful! NetID cannot be changed<p>
+                            <input class="form-control" id="friendNetID" name="netid" type="text">
+                            <br>
+                            <label class="control-label" for="friendHometown">Hometown:</label>
+                            <input class="form-control" id="friendHometown" name="hometown" type="text">
+                            <br>
+                            <label class="control-label" for="friendBio">Bio:</label>
+                            <input class="form-control" id="friendBio" name="bio" type="text">
+                            <br>
+                            <label class="control-label" for="friendMajor">Major:</label>
+                            <input class="form-control" id="friendMajor" name="major" type="text">
+                            <br>
+                            <div class="form-group">
+                                <label for="friendDorm">Dorm (must be ND):</label>
+                                <select class="form-control" id="friendDorm" name="dorm">
+                                    <option selected="selected">Alumni</option>
+                                    <option>Badin</option>
+                                    <option>BP</option>
+                                    <option>Carroll</option>
+                                    <option>Cav</option>
+                                    <option>Dillon</option>
+                                    <option>Duncan</option>
+                                    <option>Dunne</option>
+                                    <option>Farley</option>
+                                    <option>Fisher</option>
+                                    <option>Flaherty</option>
+                                    <option>Howard</option>
+                                    <option>Keenan</option>
+                                    <option>Knott</option>
+                                    <option>Lewis</option>
+                                    <option>Lyons</option>
+                                    <option>McGlinn</option>
+                                    <option>Morrissey</option>
+                                    <option>Old College</option>
+                                    <option>O'Neill</option>
+                                    <option>Pangborn</option>
+                                    <option>PE</option>
+                                    <option>PDub</option>
+                                    <option>Ryan</option>
+                                    <option>Sted's</option>
+                                    <option>Siegfried</option>
+                                    <option>Sorin</option>
+                                    <option>Walsh</option>
+                                    <option>Welsh Fam</option>
+                                    <option>Zahm</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="friendYear">Class Year:</label>
+                                <select id="friendYear" class="form-control" name="year">
+                                    <option selected="selected">2017</option>
+                                    <option>2018</option>
+                                    <option>2019</option>
+                                    <option>2020</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="friendSex">Gender:</label>
+                                <select class="form-control" id="friendSex" name="gender">
+                                    <option selected="selected">Female</option>
+                                    <option>Male</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="friendSex">Interested In:</label>
+                                <select id="friendSex" class="form-control" id="sel1" name="interested_in">
+                                    <option selected="selected">Female</option>
+                                    <option>Male</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button id="addFriendSave" type="submit" class="btn btn-primary">Go</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </form>
 				</div>
 			</div>
 		</div>
