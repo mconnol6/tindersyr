@@ -159,12 +159,14 @@ insert into setup (
     event_name,
     setter_upper,
     attendee,
+    status,
     member
 )
 values (
     e,
     su,
     a,
+    "Searching",
     m
 );
 end//

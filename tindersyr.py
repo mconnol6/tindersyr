@@ -52,6 +52,46 @@ app.config['SECRET_KEY'] = 'this should be changed'
 
 mysql.init_app(app)
 
+def create_setup(setter_upper, attendee, event):
+    #first need to find out if the attendee is a member of the dorm
+    user = get_user_info(attendee)
+    event_dorm = get_event_dorm(event)
+
+    member = 0
+
+    if user.dorm == event_dorm:
+        member = 1
+
+    conn = mysql.connect()
+    cursor = conn.cursor()
+    cursor.callproc('CreateSetup', (event, setter_upper, attendee, member))
+    conn.commit()
+    conn.close()
+
+def setup_exists(setter_upper, attendee, event):
+    conn = mysql.connect()
+    cursor = conn.cursor()
+    cursor.execute("SELECT count(*) from setup where setter_upper='{}' and attendee='{}' and event_name='{}'".format(setter_upper, attendee, event))
+
+    data = cursor.fetchall()
+
+    if data[0][0] == 0:
+        return False
+    else:
+        return True
+
+def get_event_dorm(event):
+    conn = mysql.connect()
+    cursor = conn.cursor()
+    cursor.execute("SELECT org_name FROM event where name='{}'".format(event))
+
+    data = cursor.fetchall()
+
+    if len(data) is not 0:
+        return data[0][0]
+    else:
+        return ""
+
 def get_user_info(netid):
     conn = mysql.connect()
     cursor = conn.cursor()
@@ -236,6 +276,37 @@ def get_setups(netid, status):
     conn.commit()
     conn.close()
     return setups
+
+class start_swiping(Resource):
+    def get(self):
+        if 'username' not in session:
+            return redirect(url_for('login'))
+
+        if 'attendee_netid' not in session or 'event' not in session:
+            return redirect(url_for('index'))
+
+        attendee_netid = session['attendee_netid']
+        event = session['event']
+
+        #find out if this setup already exists
+        #if it doesn't, need to create setup
+        if not setup_exists(session['username'], attendee_netid, event):
+            create_setup(session['username'], attendee_netid, event)
+
+        headers = {'Content-Type': 'text/html'}
+        return make_response(render_template('madelyn/SYRinfo.html'), 200, headers)
+
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('attendee_netid')
+        parser.add_argument('event')
+        args = parser.parse_args()
+
+        session['attendee_netid'] = args['attendee_netid']
+        session['event'] = args['event']
+
+        headers = {'Content-Type': 'text/html'}
+        return redirect(url_for("start_swiping"))
 
 class signup(Resource):
     def post(self):
@@ -506,7 +577,7 @@ class logout(Resource):
             session.pop('username', None)
         return redirect(url_for('login'))
 
-class create_setup(Resource):
+class create_setup1(Resource):
     def get(self):
         if 'username' not in session:
             return redirect(url_for('login'))
@@ -707,13 +778,14 @@ api.add_resource(index, '/index')
 api.add_resource(logout, '/logout')
 api.add_resource(edit_user, '/edit_user')
 api.add_resource(delete_account, '/delete_account')
-api.add_resource(create_setup, '/create_setup')
+api.add_resource(create_setup1, '/create_setup')
 api.add_resource(get_potential_match, '/get_potential_match')
 api.add_resource(update_potential_match_status, '/update_potential_match_status')
 api.add_resource(add_friend, '/add_friend')
 api.add_resource(get_matches, '/get_matches')
 api.add_resource(update_setup_status, '/update_setup_status')
 api.add_resource(create_friend_profile, '/create_friend_profile')
+api.add_resource(start_swiping, '/start_swiping')
 
 if __name__ == '__main__':
     app.run()
