@@ -5,11 +5,13 @@
   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
   crossorigin="anonymous"></script>
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootswatch-cyborg.css')}}">
+        <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='style.css')}}">
 		<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
 		<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 		<title>tiNDer - the SYR edition</title>
 	</head>
 	<body>
+        <!-- 
 		<nav class="navbar navbar-default">
 		  <div class="container-fluid">
 		    <div class="navbar-header">
@@ -26,66 +28,87 @@
 		    </ul>
 		  </div>
 		</nav>
-		
-<center>
+        -->
+		<nav class="navbar navbar-default">
+		<div class="container-fluid">
+			<div class="navbar-header">
+                <a class="navbar-brand" href="{{url_for('index')}}">tiNDer</a>
+			</div>
+            <form class="form-inline navbar-right" method="post" action="{{ url_for('logout') }}">
+                <button class="btn btn-default" type="submit">Logout</button>
+            </form>
+			<ul class="nav navbar-nav navbar-right">
+                <li><a href="#"><img height=20px width=20px src="{{url_for('static', filename='jaredPic.jpg')}}" style="border-radius: 50%;"></a> </li>
+                <li><a href="#">Hi, <span id="userName">{{ user_name }}</span>!</a></li> 
+			</ul>
+		</div>
+		</nav>
 
-		<h4 style="display: inline;">setting up </h4>
-		<h2 style="display: inline;" class="text-info"> Jared </h2>
-		<h4 style="display: inline;"> for the</h4>
-		
+		<div id="syrInfo" style="margin: 50px;">
+
+            <a id="backToChooseFriendAndDance" href="{{url_for('index')}}" class="btn btn-default" style="float: right; margin: 50px;">set up someone else</a>
+
+
+			<p>setting up</p>
+            <h2 id="personBeingSetUp" style="display: inline;" class="text-info"> {{ attendee }} </h2>
+			<p>for the</p>
+
 			<div id="dance_description" style="
 				height: 120px;
-				margin: 15px;
-			">
-				<h2 class="text-primary">Trumpet SYR</h2>	
-				<h6 class="text-success">Saturday, November 5th</h6>	
-				<h6 class="text-success">1011 Cedar Street</h6>	
-			</div>
-		</center>
-
-		<hr>
-
-		<center>
-			<h4 style="display: inline; margin-right: 20px">Show me:</h4>
-			<label class="checkbox-inline">
-			  <input type="checkbox" checked data-toggle="toggle"> Males
-			</label>
-			<label class="checkbox-inline">
-			  <input type="checkbox" data-toggle="toggle"> Females
-			</label>
-		</center>
-
-		<hr>
-		
-		<center>
-			
-			<div style="height:20px">
+				">
+                <h2 id="dance" class="text-primary">{{event.name}}</h2>	
+                <h6 class="text-success">{{event.location}}</h6>	
+                <h6 class="text-success">{{event.date}}</h6>	
+                <h6 class="text-success">{{event.time}}</h6>	
 			</div>
 
-			<div style="max-width: 340px;">
+			<hr>
 
-                <img src="{{ url_for('static', filename='maryPic.jpg')}}" height=250 width=250>
+			<center>
+				<h4 style="display: inline; margin-right: 20px">Show me:</h4>
+				<label class="checkbox-inline">
+					<input type="checkbox" checked data-toggle="toggle"> Males
+				</label>
+				<label class="checkbox-inline">
+					<input type="checkbox" data-toggle="toggle"> Females
+				</label>
+			</center>
 
-			<h3>Mary Connolly</h3>
-			<h6>Pasquerilla East</h6>
-			<h6>class of 2017</h6>
-			<h6>computer science</h6>
-			<h6>Baltimore, MD</h6>
+			<hr>
 
-			<br>			
-	
-			<h6 style="text-align: left;">
-				Alohamora wand elf parchment, Wingardium Leviosa hippogriff, house dementors betrayal. Holly, Snape centaur portkey ghost Hermione spell bezoar Scabbers. Peruvian-Night-Powder werewolf, Dobby pear-tickle half-moon-glasses, Knight-Bus. Padfoot snargaluff seeker: Hagrid broomstick mischief managed. Snitch Fluffy rock-cake, 9 ¾ dress robes I must not tell lies.</h6>
+			<div id="wrapper" style="text-align: center">
 
+				<div style="height:20px">
+				</div>
+
+
+
+				<div id="nay" class="yayNay" style="float: left;">
+					<h1 style="display:table-cell; vertical-align:middle">Nay</h1>
+				</div>
+
+				<div style="display: inline-block; max-width: 350px; background-color: #0f0f0f; border: 5px solid #1e1e1e; border-radius: 20px; padding: 20px;">
+
+					<center>
+                        <img src="{{url_for('static', filename='maryPic.jpg')}}" height=200 width=200 style="border-radius: 50%;">
+                        <h3 id="candidateName" class="text-info"> {{ match.name }}</h3>
+                        <h6 class="text-success"><span id="candidateDorm"> {{ match.dorm }}</span> - <span id="candidateHometown">{{ match.hometown }}</span></h6>
+                        <h6 class="text-success"><span id="candidateMajor"> {{match.major}}</span> - <span id="candidateYear">Class of {{match.year }}</span></h6>
+					</center>
+
+					<br>			
+
+					<p id="candidateBio" class="text-muted" style="text-align: left;">
+                    {{ match.bio }}
+                    </p>
+				</div>
+
+				<div id="yay" class="yayNay" style="float: right;">
+					<h1 style="display:table-cell; vertical-align:middle">Yay</h1>
+				</div>
 
 			</div>
-
-		</center>
-
-
-
 		</div>
-
-
 	</body>
 </html>
+

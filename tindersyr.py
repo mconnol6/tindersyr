@@ -2,6 +2,14 @@ from flask import Flask, request, render_template, make_response, redirect, url_
 from flask_restful import Resource, Api, reqparse
 from flask.ext.mysql import MySQL
 
+class Event:
+    def __init__(self, name, date, time, location, org_name):
+        self.name = name
+        self.date = date
+        self.time = time
+        self.location = location
+        self.org_name = org_name
+
 class Setup:
 
     def __init__(self, event_name, setter_upper, attendee, status, member):
@@ -51,6 +59,54 @@ app.config['MYSQL_DATABASE_PORT'] = 3306
 app.config['SECRET_KEY'] = 'this should be changed'
 
 mysql.init_app(app)
+
+def get_match(setter_upper, attendee, event):
+    conn = mysql.connect()
+    cursor = conn.cursor()
+
+    cursor.callproc('GetPotentialMatchList', (event, setter_upper, attendee))
+
+    data = cursor.fetchall()
+
+    if len(data) == 0:
+        return False
+
+    #0 - event
+    #1 - setter upper
+    #2 - attendee
+    #3 - status
+    #4 - member
+    #5 - attendee (again)
+    #6 - name
+    #7 - year
+    #8 - bio
+    #9 - hometown
+    #10 - gender
+    #11 - interested in
+    #12 - number
+    #13 - robot
+    #14 - dorm
+    #15 - major
+
+    #def __init__(self, netid, name, year, bio, hometown, gender, interested_in, dorm, major):
+    #create user object
+
+    other_attendee = data[0][5]
+    name = data[0][6]
+    year = data[0][7]
+    bio = data[0][8]
+    hometown = data[0][9]
+    gender = data[0][10]
+    interested_in = data[0][11]
+    dorm = data[0][14]
+    major = data[0][15]
+
+    user = User(other_attendee, name, year, bio, hometown, gender, interested_in, dorm, major)
+
+    conn.commit()
+    conn.close()
+
+    return user
 
 def create_setup(setter_upper, attendee, event):
     #first need to find out if the attendee is a member of the dorm
@@ -114,6 +170,29 @@ def get_user_info(netid):
     conn.commit()
     conn.close()
     return u
+
+def get_event_info(event_name):
+    conn = mysql.connect()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM event where name='{}'".format(event_name))
+    data = cursor.fetchall()
+
+    if len(data) == 0:
+        return False
+
+    event = data[0]
+
+    date = event[1]
+    time = event[2]
+    location = event[3]
+    org_name = event[4]
+
+    e = Event(event_name, date, time, location, org_name)
+
+    conn.commit()
+    conn.close()
+    return e
+    
     
 def get_my_matches(netid):
 
@@ -287,14 +366,23 @@ class start_swiping(Resource):
 
         attendee_netid = session['attendee_netid']
         event = session['event']
+        attendee = get_user_info(attendee_netid)
+        user = get_user_info(session['username'])
+
+        e = get_event_info(event)
 
         #find out if this setup already exists
         #if it doesn't, need to create setup
         if not setup_exists(session['username'], attendee_netid, event):
             create_setup(session['username'], attendee_netid, event)
 
+        match = get_match(session['username'], attendee_netid, event)
+
+        session.pop('attendee_netid', None)
+        session.pop('event', None)
+
         headers = {'Content-Type': 'text/html'}
-        return make_response(render_template('madelyn/SYRinfo.html'), 200, headers)
+        return make_response(render_template('madelyn/SYRinfo.html', match=match, attendee=attendee.name, user_name = user.name, event=e), 200, headers)
 
     def post(self):
         parser = reqparse.RequestParser()
