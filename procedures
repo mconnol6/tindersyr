@@ -115,12 +115,11 @@ begin
             and ii = if (ii = "Both", ii, u.gender)
             and g = if (u.interested_in = "Both", g, u.interested_in)
             and s.event_name = e
-            and (su, s.setter_upper, a, s.attendee, e)
+            and (su, a, s.attendee, e)
             not in
             ( select 
                 p.mem_setter_upper, 
-                p.nonmem_setter_upper, 
-                p.mem_attendee, p.nonmem_attendee, 
+                p.mem_attendee, p.nonmem_attendee,
                 p.event_name 
             from potential_matches as p 
             where p.member_status is not NULL
@@ -133,10 +132,9 @@ begin
             and ii = if (ii = "Both", ii, u.gender)
             and g = if (u.interested_in = "Both", g, u.interested_in)
             and s.event_name = e
-            and (s.setter_upper, su, s.attendee, a, e)
+            and (su, s.attendee, a, e)
             not in
             ( select 
-                p.mem_setter_upper, 
                 p.nonmem_setter_upper, 
                 p.mem_attendee, p.nonmem_attendee, 
                 p.event_name 

@@ -88,25 +88,47 @@ def get_match(setter_upper, attendee, event):
     #14 - dorm
     #15 - major
 
-    #def __init__(self, netid, name, year, bio, hometown, gender, interested_in, dorm, major):
     #create user object
 
     other_attendee = data[0][5]
+
+    year = ""
+    bio = ""
+    hometown = ""
+    dorm = ""
+    major = ""
+
     name = data[0][6]
-    year = data[0][7]
-    bio = data[0][8]
-    hometown = data[0][9]
+
+    if data[0][7] is not None:
+        year = 'Class of ' + str(data[0][7])
+
+    if data[0][8] is not None:
+        bio = data[0][8]
+
+    if data[0][9] is not None:
+        hometown = data[0][9]
+
+    if data[0][14] is not None:
+        dorm = data[0][14]
+
+    if data[0][15] is not None:
+        major = data[0][15]
+    
     gender = data[0][10]
     interested_in = data[0][11]
-    dorm = data[0][14]
-    major = data[0][15]
 
     user = User(other_attendee, name, year, bio, hometown, gender, interested_in, dorm, major)
+
+    member = "No"
+
+    if data[0][4] == 1:
+        member = "Yes"
 
     conn.commit()
     conn.close()
 
-    return user
+    return { 'user': user, 'setter_upper': data[0][1], 'member': member }
 
 def create_setup(setter_upper, attendee, event):
     #first need to find out if the attendee is a member of the dorm
@@ -155,8 +177,12 @@ def get_user_info(netid):
     data = cursor.fetchall()
 
     user = data[0]
+    name = ""
+    year = ""
     
-    name = user[1]
+    if user[1]:
+        name = user[1]
+
     year = user[2]
     bio = user[3]
     hometown = user[4]
@@ -361,8 +387,11 @@ class start_swiping(Resource):
         if 'username' not in session:
             return redirect(url_for('login'))
 
-        if 'attendee_netid' not in session or 'event' not in session:
-            return redirect(url_for('index'))
+        #if 'attendee_netid' not in session or 'event' not in session:
+        #    return redirect(url_for('index'))
+
+        #if 'attendee_netid' not in session:
+        #    print "not in session"
 
         attendee_netid = session['attendee_netid']
         event = session['event']
@@ -376,13 +405,13 @@ class start_swiping(Resource):
         if not setup_exists(session['username'], attendee_netid, event):
             create_setup(session['username'], attendee_netid, event)
 
-        match = get_match(session['username'], attendee_netid, event)
+        match_info = get_match(session['username'], attendee_netid, event)
 
-        session.pop('attendee_netid', None)
-        session.pop('event', None)
+        if not match_info:
+            return 'no new matches :('
 
         headers = {'Content-Type': 'text/html'}
-        return make_response(render_template('madelyn/SYRinfo.html', match=match, attendee=attendee.name, user_name = user.name, event=e), 200, headers)
+        return make_response(render_template('madelyn/SYRinfo.html', match=match_info['user'], attendee=attendee, user=user, event=e, other_setter_upper = match_info['setter_upper'], member = match_info['member']), 200, headers)
 
     def post(self):
         parser = reqparse.RequestParser()
@@ -566,6 +595,10 @@ class index(Resource):
         try:
             if 'username' not in session:
                 return redirect(url_for('login'))
+        
+            session.pop('attendee_netid', None)
+            session.pop('event', None)
+
 
             conn = mysql.connect()
             cursor = conn.cursor()
@@ -740,7 +773,6 @@ class update_setup_status(Resource):
             conn = mysql.connect()
             cursor = conn.cursor()
             mysql_stmt = "UPDATE setup SET status = '{}' WHERE event_name = '{}' and setter_upper = '{}' and attendee = '{}'".format(args['status'], args['event'], session['username'], args['attendee'])
-            print mysql_stmt
             cursor.execute(mysql_stmt)
             conn.commit()
             conn.close()
@@ -797,7 +829,7 @@ class update_potential_match_status(Resource):
         conn.commit()
         conn.close()
 
-        return redirect(url_for('get_potential_match'), code=307)
+        return redirect(url_for('start_swiping'), code=307)
 
 class get_potential_match(Resource):
     def post(self):

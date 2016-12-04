@@ -11,24 +11,6 @@
 		<title>tiNDer - the SYR edition</title>
 	</head>
 	<body>
-        <!-- 
-		<nav class="navbar navbar-default">
-		  <div class="container-fluid">
-		    <div class="navbar-header">
-		      <a class="navbar-brand" href="index.html">tiNDer: the SYR edition</a>
-		    </div>
-		    <ul class="nav navbar-nav">
-		      <li class="active"><a href="#">SYRs</a></li>
-		      <li><a href="#">Favs</a></li> 
-		      <li><a href="index.html">Logout</a></li> 
-			</ul>
-			<ul class="nav navbar-nav navbar-right">
-                <li><a href="#"><img height=30px width=30px src="{{ url_for('static', filename='jaredPic.jpg')}}"></a> </li>
-		    	<li><a href="#">Hi, Paul!</a></li> 
-		    </ul>
-		  </div>
-		</nav>
-        -->
 		<nav class="navbar navbar-default">
 		<div class="container-fluid">
 			<div class="navbar-header">
@@ -39,7 +21,7 @@
             </form>
 			<ul class="nav navbar-nav navbar-right">
                 <li><a href="#"><img height=20px width=20px src="{{url_for('static', filename='jaredPic.jpg')}}" style="border-radius: 50%;"></a> </li>
-                <li><a href="#">Hi, <span id="userName">{{ user_name }}</span>!</a></li> 
+                <li><a href="#">Hi, <span id="userName">{{ user.name }}</span>!</a></li> 
 			</ul>
 		</div>
 		</nav>
@@ -50,7 +32,7 @@
 
 
 			<p>setting up</p>
-            <h2 id="personBeingSetUp" style="display: inline;" class="text-info"> {{ attendee }} </h2>
+            <h2 id="personBeingSetUp" style="display: inline;" class="text-info"> {{ attendee.name }} </h2>
 			<p>for the</p>
 
 			<div id="dance_description" style="
@@ -81,19 +63,27 @@
 				<div style="height:20px">
 				</div>
 
-
-
-				<div id="nay" class="yayNay" style="float: left;">
-					<h1 style="display:table-cell; vertical-align:middle">Nay</h1>
-				</div>
+                <form method="post" action="{{url_for('update_potential_match_status')}}">
+                    <input type="hidden" name="other_setter_upper" value="{{ other_setter_upper }}"/>
+                    <input type="hidden" name="other_attendee" value="{{ match.netid }}"/>
+                    <input type="hidden" name="attendee" value="{{ attendee.netid }}"/>
+                    <input type="hidden" name="event" value="{{ event.name }}"/>
+                    <input type="hidden" name="member" value="{{ member }}"/>
+                    <input type="hidden" name="status" value="No"/>
+                    <div onclick= "this.parentNode.submit();" id="nay" class="yayNay" style="float: left;">
+                        <h1 style="display:table-cell; vertical-align:middle">Nay</h1>
+                    </div>
+                </form>
 
 				<div style="display: inline-block; max-width: 350px; background-color: #0f0f0f; border: 5px solid #1e1e1e; border-radius: 20px; padding: 20px;">
 
 					<center>
                         <img src="{{url_for('static', filename='maryPic.jpg')}}" height=200 width=200 style="border-radius: 50%;">
                         <h3 id="candidateName" class="text-info"> {{ match.name }}</h3>
-                        <h6 class="text-success"><span id="candidateDorm"> {{ match.dorm }}</span> - <span id="candidateHometown">{{ match.hometown }}</span></h6>
-                        <h6 class="text-success"><span id="candidateMajor"> {{match.major}}</span> - <span id="candidateYear">Class of {{match.year }}</span></h6>
+                        <h6 class="text-success"><span id="candidateDorm"> {{ match.dorm }}</span></h6>
+                        <h6 class = "text-success"><span id="candidateHometown">{{ match.hometown }}</span></h6>
+                        <h6 class="text-success"><span id="candidateMajor"> {{match.major}}</span></h6> 
+                        <h6 class="text-success"><span id="candidateYear">{{match.year}}</span></h6>
 					</center>
 
 					<br>			
