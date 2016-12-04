@@ -387,11 +387,8 @@ class start_swiping(Resource):
         if 'username' not in session:
             return redirect(url_for('login'))
 
-        #if 'attendee_netid' not in session or 'event' not in session:
-        #    return redirect(url_for('index'))
-
-        #if 'attendee_netid' not in session:
-        #    print "not in session"
+        if 'attendee_netid' not in session or 'event' not in session:
+            return redirect(url_for('index'))
 
         attendee_netid = session['attendee_netid']
         event = session['event']
@@ -419,8 +416,11 @@ class start_swiping(Resource):
         parser.add_argument('event')
         args = parser.parse_args()
 
-        session['attendee_netid'] = args['attendee_netid']
-        session['event'] = args['event']
+        if args['attendee_netid'] is not None:
+            session['attendee_netid'] = args['attendee_netid']
+
+        if args['event'] is not None:
+            session['event'] = args['event']
 
         headers = {'Content-Type': 'text/html'}
         return redirect(url_for("start_swiping"))
