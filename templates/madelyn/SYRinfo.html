@@ -94,9 +94,18 @@
 				</div>
 
 				<div id="yay" class="yayNay" style="float: right;">
-					<h1 style="display:table-cell; vertical-align:middle">Yay</h1>
+                <form method="post" action="{{url_for('update_potential_match_status')}}">
+                    <input type="hidden" name="other_setter_upper" value="{{ other_setter_upper }}"/>
+                    <input type="hidden" name="other_attendee" value="{{ match.netid }}"/>
+                    <input type="hidden" name="attendee" value="{{ attendee.netid }}"/>
+                    <input type="hidden" name="event" value="{{ event.name }}"/>
+                    <input type="hidden" name="member" value="{{ member }}"/>
+                    <input type="hidden" name="status" value="Yes"/>
+                    <div onclick= "this.parentNode.submit();" id="yay" class="yayNay" style="float: left;">
+                        <h1 style="display:table-cell; vertical-align:middle">Yay</h1>
+                    </div>
 				</div>
-
+                </form>
 			</div>
 		</div>
 	</body>
