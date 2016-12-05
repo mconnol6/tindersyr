@@ -1,6 +1,7 @@
 from flask import Flask, request, render_template, make_response, redirect, url_for, session
 from flask_restful import Resource, Api, reqparse
 from flask.ext.mysql import MySQL
+import traceback
 
 class Event:
     def __init__(self, name, date, time, location, org_name):
@@ -256,7 +257,7 @@ def get_my_matches(netid):
         matches.append(match)
     
     #nonmember attendances
-    cursor.execute("SELECT mem_attendee, event_name nonmem_setter_upper from potential_matches where nonmem_attendee='{}' and member_status='Yes' and nonmember_status = 'Yes' order by event_name".format(netid))
+    cursor.execute("SELECT mem_attendee, event_name, nonmem_setter_upper from potential_matches where nonmem_attendee='{}' and member_status='Yes' and nonmember_status = 'Yes' order by event_name".format(netid))
 
     data = cursor.fetchall()
     
@@ -280,7 +281,7 @@ def get_my_matches(netid):
         if len(d3) != 0:
             setter_upper = d3[0][0]
 
-        match = Match(m[0], match_name, m[1], setter_upper)
+        match = Match(m[0], match_name, m[1], setter_upper, dorm)
         matches.append(match)
 
     conn.commit()
@@ -340,14 +341,19 @@ def get_matches_query(attendee, setter_upper, event, member):
 
         attendee_name = data[0][0]
 
-        if (member == "1"):
+        if (member == 1):
             sql_stmt = "SELECT nonmem_attendee FROM potential_matches WHERE mem_attendee='{}' and mem_setter_upper='{}' and event_name='{}' and member_status= 'Yes' and nonmember_status='Yes'".format(attendee, setter_upper, event)
         else:
             sql_stmt = "SELECT mem_attendee FROM potential_matches WHERE nonmem_attendee='{}' and nonmem_setter_upper='{}' and event_name='{}' and member_status= 'Yes' and nonmember_status='Yes'".format(attendee, setter_upper, event)
 
         cursor.execute(sql_stmt)
 
+        print sql_stmt
+
         data = cursor.fetchall()
+
+        print data
+
         matches = []
         for m in data:
             name = ""
@@ -372,6 +378,8 @@ def get_setups(netid, status):
     sql_stmt = "SELECT event_name, attendee, member from setup where setup.setter_upper = '{}' and status= '{}'".format(netid, status)
     cursor.execute(sql_stmt)
     data = cursor.fetchall()
+
+    print data
 
     setups = []
     for s in data:
@@ -646,6 +654,7 @@ class index(Resource):
                 return redirect(url_for('login'))
         
         except Exception as e:
+            traceback.print_exc()
             return {'error': str(e) }
 
 class login(Resource):
