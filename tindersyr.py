@@ -2,6 +2,8 @@ from flask import Flask, request, render_template, make_response, redirect, url_
 from flask_restful import Resource, Api, reqparse
 from flask.ext.mysql import MySQL
 import traceback
+from werkzeug.utils import secure_filename
+import os
 
 class Event:
     def __init__(self, name, date, time, location, org_name):
@@ -58,6 +60,9 @@ app.config['MYSQL_DATABASE_DB'] = 'mconnol6'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 app.config['MYSQL_DATABASE_PORT'] = 3306
 app.config['SECRET_KEY'] = 'this should be changed'
+app.config['UPLOAD_FOLDER'] = './uploads'
+
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
 mysql.init_app(app)
 
@@ -649,7 +654,7 @@ class index(Resource):
                     my_event_matches[match.event].append(match)
 
                 headers = {'Content-Type': 'text/html'}
-                return make_response(render_template('madelyn/init.html', name=name, events=events, friends=friends, friend_event_matches = friend_event_matches, my_event_matches=my_event_matches, user=user),200,headers)
+                return make_response(render_template('madelyn/init.html', username=session['username'], name=name, events=events, friends=friends, friend_event_matches = friend_event_matches, my_event_matches=my_event_matches, user=user),200,headers)
             else:
                 return redirect(url_for('login'))
         
@@ -900,6 +905,22 @@ class get_potential_match(Resource):
 @app.route('/')
 def goto_index():
     return redirect(url_for('index'))
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
+@app.route('/upload_picture', methods=['POST'])
+def upload_picture():
+    if 'file' in request.files:
+        file = request.files['file']
+        if file.filename != '':
+            print file.filename
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], 'test'))
+    else:
+        print 'not in files'
+    return 'success'
 
 api.add_resource(signup, '/signup')
 api.add_resource(login, '/login')
