@@ -2,10 +2,14 @@
 	<head>
     <!-- <link rel="stylesheet" type="text/css" href="css/bootswatch-cyborg.css"> -->
     <link rel="stylesheet" type="text/css" href=" {{ url_for('static', filename='bootswatch-cyborg.css') }} ">
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <meta name="google-signin-client_id" content="568303473184-9q1si6vu9e2g9oi3j3okv2m4he54rh6c.apps.googleusercontent.com">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="https://apis.google.com/js/platform.js" async defer></script>
         <script src="{{url_for('static', filename='set_hidden_inputs.js')}}"></script>
         <script src="{{url_for('static', filename='upload_button.js')}}"></script>
+        <script src="{{url_for('static', filename='google_login.js')}}"></script>
+
 		<title>tiNDer - the SYR edition</title>
 	</head>
     <body background="{{ url_for('static', filename='background2.jpg') }}" style="
@@ -220,7 +224,10 @@
                 </div>
 
 			<center>	
-				<!-- Log In -->
+
+                                <div class="g-signin2" data-onsuccess="onSignIn"></div>
+
+				<!-- Log In
 				<button type="button" style="
 					color: white;
 					background-color: transparent;
@@ -229,6 +236,7 @@
 					font-size: 18px;
 					margin: 8px;
 					" data-toggle="modal" data-target="#loginModal">login</button>
+				-->
 				
 				<!-- Sign Up -->
 				<button type="button" style="
