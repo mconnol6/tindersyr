@@ -150,6 +150,7 @@
                                     <option>Flaherty</option>
                                     <option>Howard</option>
                                     <option>Keenan</option>
+                                    <option>Keough</option>
                                     <option>Knott</option>
                                     <option>Lewis</option>
                                     <option>Lyons</option>
@@ -372,7 +373,7 @@
                                         {% for e in events %}
                                             <tr style="width: 100%;">
                                                 <td style="width: 100%">
-                                                    <input type="radio" name="event" value="{{e}}">{{e}}</input>
+                                                    <input type="radio" name="event" value="{{e}}">  {{e}}</input>
                                                 </td>
                                             </tr>
                                         {% endfor %}
@@ -448,7 +449,7 @@
                         {% for m in friend_event_matches[event] %}
                             <tr>
                                 <td>
-                                    <h5>{{m.other_name}}</h5>
+                                    <h5 style="color: gray;">{{m.other_name}}</h5>
                                 </td>
                                 <td>
                                     <h5>{{m.match_name}}</h5>

@@ -66,7 +66,7 @@ ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
 mysql.init_app(app)
 
-def get_interests():
+def get_all_interests():
     conn = mysql.connect()
     cursor = conn.cursor()
 
@@ -149,6 +149,23 @@ def get_match(setter_upper, attendee, event):
     conn.close()
 
     return { 'user': user, 'setter_upper': data[0][1], 'member': member }
+
+def get_interests(netid):
+    conn = mysql.connect()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT interest_name from user_interest where user_netid='{}'".format(netid))
+
+    data = cursor.fetchall()
+
+    conn.commit()
+    conn.close()
+    
+    interests = []
+    for d in data:
+        interests.append(d[0])
+
+    return interests
 
 def create_setup(setter_upper, attendee, event):
     #first need to find out if the attendee is a member of the dorm
@@ -439,9 +456,11 @@ class start_swiping(Resource):
             match_pic = './static/' + match_info['user'].netid
         else:
             match_pic = '/static/default-pro-pic.png'
+
+        interests = get_interests(match_info['user'].netid)
         
 
-        return make_response(render_template('madelyn/SYRinfo.html', pic=pic, match_pic = match_pic, match=match_info['user'], attendee=attendee, user=user, event=e, other_setter_upper = match_info['setter_upper'], member = match_info['member']), 200, headers)
+        return make_response(render_template('madelyn/SYRinfo.html', interests=interests, pic=pic, match_pic = match_pic, match=match_info['user'], attendee=attendee, user=user, event=e, other_setter_upper = match_info['setter_upper'], member = match_info['member']), 200, headers)
 
     def post(self):
         parser = reqparse.RequestParser()
@@ -695,7 +714,7 @@ class login(Resource):
     def get(self):
         headers = {'Content-Type': 'text/html'}
         #return make_response(render_template('login.html'),200,headers)
-        interests = get_interests()
+        interests = get_all_interests()
         return make_response(render_template('madelyn/index.html', interests=interests), 200, headers)
 
     def post(self):

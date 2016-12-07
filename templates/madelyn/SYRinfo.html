@@ -44,18 +44,7 @@
                 <h6 class="text-success">{{event.time}}</h6>	
 			</div>
 
-			<hr>
-
-			<center>
-				<h4 style="display: inline; margin-right: 20px">Show me:</h4>
-				<label class="checkbox-inline">
-					<input type="checkbox" checked data-toggle="toggle"> Males
-				</label>
-				<label class="checkbox-inline">
-					<input type="checkbox" data-toggle="toggle"> Females
-				</label>
-			</center>
-
+            <br/>
 			<hr>
 
 			<div id="wrapper" style="text-align: center">
@@ -91,6 +80,11 @@
 					<p id="candidateBio" class="text-muted" style="text-align: left;">
                     {{ match.bio }}
                     </p>
+
+                    Interested in:<br/>
+                    {% for i in interests %}
+                    {{i}}<br/>
+                    {% endfor %}
 				</div>
 
 				<div id="yay" class="yayNay" style="float: right;">

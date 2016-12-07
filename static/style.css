@@ -7,6 +7,7 @@
 	border: 2px solid gray; 
 	text-align:center; 
 	display:table;
+    cursor:pointer;
 }
 
 #nay:hover {
