@@ -200,7 +200,7 @@ begin
             from potential_matches as p 
             where p.member_status is not NULL
             or p.nonmember_status = "No")
-            order by common_interests desc;
+            order by common_interests desc, rand();
     else
         select *,
             (select count(*) from user_interest as t1, user_interest as t2
@@ -223,7 +223,7 @@ begin
             from potential_matches as p
             where p.nonmember_status is not NULL
             or p.member_status = "No")
-            order by common_interests desc;
+            order by common_interests desc, rand();
 
     end if;
 end//
