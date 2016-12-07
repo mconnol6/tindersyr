@@ -1,6 +1,7 @@
 from flask import Flask, request, render_template, make_response, redirect, url_for, session
 from flask_restful import Resource, Api, reqparse
 from flask.ext.mysql import MySQL
+from oauth2client import client
 import traceback
 from werkzeug.utils import secure_filename
 import os
@@ -719,11 +720,15 @@ class login(Resource):
 
     def post(self):
         try:
-            parser = reqparse.RequestParser()
-            parser.add_argument('netid', type=str)
-            args = parser.parse_args()
+	    for key in request.form:
+	        email = key
+            netid = email.split('@')[0]
 
-            netid = args['netid']
+            #parser = reqparse.RequestParser()
+            #parser.add_argument('netid', type=str)
+            #args = parser.parse_args()
+
+            #netid = args['netid']
 
             conn = mysql.connect()
             cursor = conn.cursor()
