@@ -968,34 +968,40 @@ def upload_picture():
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], session['username']))
     return redirect(url_for('index'))
 
-@app.route('/signup', methods=['POST'])
+
+@app.route('/signup', methods=['GET', 'POST'])
 def signup():
-    n_netid = request.form.get('netid')
-    n_name = request.form.get('name')
-    n_year = request.form.get('year')
-    n_bio = request.form.get('bio')
-    n_hometown = request.form.get('hometown')
-    n_gender = request.form.get('gender')
-    n_interested_in = request.form.get('interested_in')
-    n_dorm = request.form.get('dorm')
-    n_major = request.form.get('major')
 
-    conn = mysql.connect()
-    cursor = conn.cursor()
-    sql_stmt = "INSERT INTO users (netid, name, year, bio, hometown, gender, interested_in, robot, dorm, major) VALUES (%(netid)s, %(name)s, %(year)s, %(bio)s, %(hometown)s, %(gender)s, %(interested_in)s, %(robot)s, %(dorm)s, %(major)s);"
+    if request.method == 'POST':
+	    n_netid = request.form.get('netid')
+	    n_name = request.form.get('name')
+	    n_year = request.form.get('year')
+	    n_bio = request.form.get('bio')
+	    n_hometown = request.form.get('hometown')
+	    n_gender = request.form.get('gender')
+	    n_interested_in = request.form.get('interested_in')
+	    n_dorm = request.form.get('dorm')
+	    n_major = request.form.get('major')
 
-    cursor.execute(sql_stmt, {'netid': n_netid, 'name': n_name, 'year': n_year, 'bio': n_bio, 'hometown': n_hometown, 'gender': n_gender, 'interested_in': n_interested_in, 'robot': 0, 'dorm': n_dorm, 'major': n_major });
-    data = cursor.fetchall()
+	    conn = mysql.connect()
+	    cursor = conn.cursor()
+	    sql_stmt = "INSERT INTO users (netid, name, year, bio, hometown, gender, interested_in, robot, dorm, major) VALUES (%(netid)s, %(name)s, %(year)s, %(bio)s, %(hometown)s, %(gender)s, %(interested_in)s, %(robot)s, %(dorm)s, %(major)s);"
 
-    #add interests
-    interests = request.form.getlist('interest')
-    for i in interests:
-        cursor.execute("INSERT INTO user_interest VALUES('{}', '{}')".format(n_netid, i))
+	    cursor.execute(sql_stmt, {'netid': n_netid, 'name': n_name, 'year': n_year, 'bio': n_bio, 'hometown': n_hometown, 'gender': n_gender, 'interested_in': n_interested_in, 'robot': 0, 'dorm': n_dorm, 'major': n_major });
+	    data = cursor.fetchall()
 
-    conn.commit()
-    conn.close()
-    session['username'] = n_netid
-    return redirect(url_for('index'))
+	    #add interests
+	    interests = request.form.getlist('interest')
+	    for i in interests:
+		cursor.execute("INSERT INTO user_interest VALUES('{}', '{}')".format(n_netid, i))
+
+	    conn.commit()
+	    conn.close()
+	    session['username'] = n_netid
+	    return redirect(url_for('index'))
+
+    headers = {'Content-Type': 'text/html'}
+    return make_response(render_template('madelyn/signup.html'))
 
 #api.add_resource(signup, '/signup')
 api.add_resource(login, '/login')
