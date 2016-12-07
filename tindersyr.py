@@ -66,6 +66,20 @@ ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
 mysql.init_app(app)
 
+def get_interests():
+    conn = mysql.connect()
+    cursor = conn.cursor()
+
+    cursor.execute('select name from interest;')
+
+    data = cursor.fetchall()
+
+    interests = []
+    for d in data:
+        interests.append(d[0])
+
+    return interests
+
 def get_match(setter_upper, attendee, event):
     conn = mysql.connect()
     cursor = conn.cursor()
@@ -444,45 +458,49 @@ class start_swiping(Resource):
         headers = {'Content-Type': 'text/html'}
         return redirect(url_for("start_swiping"))
 
-class signup(Resource):
-    def post(self):
-        try:
-            parser = reqparse.RequestParser()
-            parser.add_argument('netid', type=str)
-            parser.add_argument('name', type=str)
-            parser.add_argument('year', type=int)
-            parser.add_argument('bio', type=str)
-            parser.add_argument('hometown', type=str)
-            parser.add_argument('gender', type=str)
-            parser.add_argument('interested_in', type=str)
-            parser.add_argument('dorm', type=str)
-            parser.add_argument('major', type=str)
-            args = parser.parse_args()
+#class signup(Resource):
+#    def post(self):
+#        try:
+#            parser = reqparse.RequestParser()
+#            parser.add_argument('netid', type=str)
+#            parser.add_argument('name', type=str)
+#            parser.add_argument('year', type=int)
+#            parser.add_argument('bio', type=str)
+#            parser.add_argument('hometown', type=str)
+#            parser.add_argument('gender', type=str)
+#            parser.add_argument('interested_in', type=str)
+#            parser.add_argument('dorm', type=str)
+#            parser.add_argument('major', type=str)
+#            parser.add_argument('interest')
+#            args = parser.parse_args()
+#
+#            print args['interest']
+#
+#            n_netid = args['netid']
+#            n_name = args['name']
+#            n_year = args['year']
+#            n_bio = args['bio']
+#            n_hometown = args['hometown']
+#            n_gender = args['gender']
+#            n_interested_in = args['interested_in']
+#            n_dorm = args['dorm']
+#            n_major = args['major']
+#
+#            conn = mysql.connect()
+#            cursor = conn.cursor()
+#            sql_stmt = "INSERT INTO users (netid, name, year, bio, hometown, gender, interested_in, robot, dorm, major) VALUES (%(netid)s, %(name)s, %(year)s, %(bio)s, %(hometown)s, %(gender)s, %(interested_in)s, %(robot)s, %(dorm)s, %(major)s);"
+#
+#            cursor.execute(sql_stmt, {'netid': n_netid, 'name': n_name, 'year': n_year, 'bio': n_bio, 'hometown': n_hometown, 'gender': n_gender, 'interested_in': n_interested_in, 'robot': 0, 'dorm': n_dorm, 'major': n_major });
+#            data = cursor.fetchall()
+#
+#            conn.commit()
+#            conn.close()
+#            session['username'] = n_netid
+#            return redirect(url_for('index'))
 
-            n_netid = args['netid']
-            n_name = args['name']
-            n_year = args['year']
-            n_bio = args['bio']
-            n_hometown = args['hometown']
-            n_gender = args['gender']
-            n_interested_in = args['interested_in']
-            n_dorm = args['dorm']
-            n_major = args['major']
-
-            conn = mysql.connect()
-            cursor = conn.cursor()
-            sql_stmt = "INSERT INTO users (netid, name, year, bio, hometown, gender, interested_in, robot, dorm, major) VALUES (%(netid)s, %(name)s, %(year)s, %(bio)s, %(hometown)s, %(gender)s, %(interested_in)s, %(robot)s, %(dorm)s, %(major)s);"
-
-            cursor.execute(sql_stmt, {'netid': n_netid, 'name': n_name, 'year': n_year, 'bio': n_bio, 'hometown': n_hometown, 'gender': n_gender, 'interested_in': n_interested_in, 'robot': 0, 'dorm': n_dorm, 'major': n_major });
-            data = cursor.fetchall()
-
-            conn.commit()
-            conn.close()
-            session['username'] = n_netid
-            return redirect(url_for('index'))
-
-        except Exception as e:
-            return {'error' : str(e)}
+#        except Exception as e:
+#            traceback.print_exc()
+#            return {'error' : str(e)}
 
 class create_friend_profile(Resource):
     def post(self):
@@ -677,7 +695,8 @@ class login(Resource):
     def get(self):
         headers = {'Content-Type': 'text/html'}
         #return make_response(render_template('login.html'),200,headers)
-        return make_response(render_template('madelyn/index.html'), 200, headers)
+        interests = get_interests()
+        return make_response(render_template('madelyn/index.html', interests=interests), 200, headers)
 
     def post(self):
         try:
@@ -930,7 +949,36 @@ def upload_picture():
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], session['username']))
     return redirect(url_for('index'))
 
-api.add_resource(signup, '/signup')
+@app.route('/signup', methods=['POST'])
+def signup():
+    n_netid = request.form.get('netid')
+    n_name = request.form.get('name')
+    n_year = request.form.get('year')
+    n_bio = request.form.get('bio')
+    n_hometown = request.form.get('hometown')
+    n_gender = request.form.get('gender')
+    n_interested_in = request.form.get('interested_in')
+    n_dorm = request.form.get('dorm')
+    n_major = request.form.get('major')
+
+    conn = mysql.connect()
+    cursor = conn.cursor()
+    sql_stmt = "INSERT INTO users (netid, name, year, bio, hometown, gender, interested_in, robot, dorm, major) VALUES (%(netid)s, %(name)s, %(year)s, %(bio)s, %(hometown)s, %(gender)s, %(interested_in)s, %(robot)s, %(dorm)s, %(major)s);"
+
+    cursor.execute(sql_stmt, {'netid': n_netid, 'name': n_name, 'year': n_year, 'bio': n_bio, 'hometown': n_hometown, 'gender': n_gender, 'interested_in': n_interested_in, 'robot': 0, 'dorm': n_dorm, 'major': n_major });
+    data = cursor.fetchall()
+
+    #add interests
+    interests = request.form.getlist('interest')
+    for i in interests:
+        cursor.execute("INSERT INTO user_interest VALUES('{}', '{}')".format(n_netid, i))
+
+    conn.commit()
+    conn.close()
+    session['username'] = n_netid
+    return redirect(url_for('index'))
+
+#api.add_resource(signup, '/signup')
 api.add_resource(login, '/login')
 api.add_resource(index, '/index')
 api.add_resource(logout, '/logout')

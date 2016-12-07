@@ -4,6 +4,15 @@ function set_hidden_inputs() {
     $('#dorm').val($('#dorm_first').val());    
 }
 
+function set_hidden_inputs2() {
+    $('#year').val($('#year_first').val());    
+    $('#bio').val($('#bio_first').val());    
+    $('#hometown').val($('#hometown_first').val());    
+    $('#gender').val($('#gender_first').val());    
+    $('#interested_in').val($('#interested_in_first').val());    
+    $('#major').val($('#major_first').val());    
+}
+
 
 var interestArr = [];
 
