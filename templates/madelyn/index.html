@@ -53,8 +53,8 @@
                                 <input class="form-control" name="passwordInput" type="password">
                             </div>
                             <div class="modal-footer">
-                                <input type="submit" value="Submit" class="btn btn-primary"/>
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                <input type="submit" value="Submit" class="btn btn-primary"/>
                             </div>
                         </form>
 					</div>
@@ -118,36 +118,13 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#signUpModal3">Next</button>
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#signUpModal2">Next</button>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Sign Up Modal 3 -->
-                <div id="signUpModal3" class="modal fade" role="dialog">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                <h4 class="modal-title">Profile Pic</h4>
-                            </div>
-                            <div class="modal-body">
-                                <form id="upload_form" enctype="multipart/form-data" method="post" action="{{url_for('upload_picture')}}">
-                                    <label class="control-label" for="proPic">Upload Profile Pic:</label>
-                                    <input type="file" name="file" id="proPic" multiple>
-                                    <button type="button" id="upload_button" class="btn btn-primary">Upload!</button>
-                                    <button type="submit" class="btn btn-primary">Submit</button>
-                                </form>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#signUpModal2">Next</button>
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
                 <!-- Sign Up Modal 2 -->
                 <div id="signUpModal2" class="modal fade" role="dialog">
@@ -163,7 +140,7 @@
                                 <input type="hidden" name="dorm" id="dorm"/>
                                 <div class="modal-body">
                                     <label class="control-label" for="bio">Bio:</label>
-                                    <input class="form-control input-lg" name="bio" type="text">
+                                    <input class="form-control" name="bio" type="text">
                                     <br>
                                     <label class="control-label" for="hometown">Hometown:</label>
                                     <input class="form-control" name="hometown" type="text">
@@ -197,8 +174,59 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <input type="submit" class="btn btn-primary" value="Okay, I'm ready to start!" data-target="#signUpModal3" />
                                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                    <!--<button type="submit" class="btn btn-primary" data-dismiss="modal" value="Okay, I'm ready to start!">OKAY</button>-->
+                                <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#signUpModal3">Next</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sign Up Modal 3: Interests -->
+                <div id="signUpModal3" class="modal fade" role="dialog">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">One more step! What do you like to do?</h4>
+                            </div>
+                            <form >
+                                <input type="hidden" name="name" id="name"/>
+                                <input type="hidden" name="netid" id="netid"/>
+                                <input type="hidden" name="dorm" id="dorm"/>
+                                <div class="modal-body">
+					<p>My interests: </p>
+					<p id="interestList"></p>
+					<br>
+                                    <label class="control-label" for="interests">Select your interests:</label>
+<br>
+					<div id="interests">
+						<button id="interest0" type="button" class="btn btn-default">Running</button>
+						<button id="interest1" type="button" class="btn btn-primary">Hiking</button>
+						<button id="interest2" type="button" class="btn btn-info">Knitting</button>
+<br>
+<br>
+						<button id="interest3" type="button" class="btn btn-warning">Studying</button>
+						<button id="interest4" type="button" class="btn btn-danger">Music</button>
+						<button id="interest5" type="button" class="btn btn-success">Art</button>
+<br>
+<br>
+						<button id="interest6" type="button" class="btn btn-default">Hamtilon</button>
+						<button id="interest7" type="button" class="btn btn-primary">Gardening</button>
+						<button id="interest8" type="button" class="btn btn-info">Food</button>
+<br>
+<br>
+						<button id="interest9" type="button" class="btn btn-warning">Irish Football</button>
+						<button id="interest10" type="button" class="btn btn-danger">Weather</button>
+						<button id="interest11" type="button" class="btn btn-success">Coding</button>
+					</div>
+                                    <br>
+                                </div>
+                                <div class="modal-footer">
+					<button type="button" class="btn btn-warning" id="clear">Clear Interests</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+					<input type="submit" value="Submit" class="btn btn-primary">
                                 </div>
                             </form>
                         </div>
@@ -232,10 +260,16 @@
 			</div>
 
 			<div style="
-				height: 300px;
+				height: 200px;
 				background-color: black;
 				">
-
+				<br>
+				<br>
+				<br>
+				<br>
+				<center>
+				<h6 style="color: gray;">Brought to you by JPM2</h6>
+				</center>
 			</div>
 
 

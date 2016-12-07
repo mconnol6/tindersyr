@@ -31,11 +31,39 @@
                 <button class="btn btn-default" type="submit">Logout</button>
             </form>
 			<ul class="nav navbar-nav navbar-right">
-                <li><a href="#"><img height=20px width=20px src="/static/{{username}}.jpg" style="border-radius: 50%;"></a> </li>
+                <li><a href="#profilePicModal" data-dismiss="modal" data-toggle="modal" data-target="#profilePicModal"><img height=20px width=20px src="/static/default-pro-pic.png" style="border-radius: 50%;"></a></li>
+                <!--<li id="proPicEdit"><a href="#"><img height=20px width=20px src="/static/{{username}}" style="border-radius: 50%;"></a></li>
+-->
                 <li><a href="#">Hi, <span id="userName">{{ name }}</span>!</a></li> 
 			</ul>
 		</div>
 		</nav>
+                
+
+		<!-- Profile Pic Modal -->
+                <div id="profilePicModal" class="modal fade" role="dialog">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">Profile Pic</h4>
+                            </div>
+                            <div class="modal-body">
+                                <form id="upload_form" enctype="multipart/form-data" method="post" action="{{url_for('upload_picture')}}">
+                                    <label class="control-label" for="proPic">Upload Profile Pic:</label>
+                                    <input type="file" name="file" id="proPic" multiple>
+					<br>
+                                    <button type="button" id="upload_button" class="btn btn-info">Upload!</button>
+                                    <button type="submit" class="btn btn-success">Submit</button>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="modal">Done</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
 
 		<!-- No More Options Modal -->

@@ -122,6 +122,7 @@ $( document ).ready(function() {
 	$("#userName").text(userProfile["userInfo"][0]["name"]);
 	$("#userName2").text(userProfile["userInfo"][0]["name"]);
 
+	
 
 	$("#editProfileLink").click(function () {
 		// initialize edit profile modal to the current stuff

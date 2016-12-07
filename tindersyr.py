@@ -353,11 +353,7 @@ def get_matches_query(attendee, setter_upper, event, member):
 
         cursor.execute(sql_stmt)
 
-        print sql_stmt
-
         data = cursor.fetchall()
-
-        print data
 
         matches = []
         for m in data:
