@@ -60,7 +60,7 @@ app.config['MYSQL_DATABASE_DB'] = 'mconnol6'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 app.config['MYSQL_DATABASE_PORT'] = 3306
 app.config['SECRET_KEY'] = 'this should be changed'
-app.config['UPLOAD_FOLDER'] = './uploads'
+app.config['UPLOAD_FOLDER'] = './static'
 
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
@@ -380,8 +380,6 @@ def get_setups(netid, status):
     cursor.execute(sql_stmt)
     data = cursor.fetchall()
 
-    print data
-
     setups = []
     for s in data:
         setup = Setup(s[0], session['username'], s[1], "", s[2])
@@ -413,11 +411,23 @@ class start_swiping(Resource):
 
         match_info = get_match(session['username'], attendee_netid, event)
 
-        if not match_info:
-            return 'no new matches :('
-
         headers = {'Content-Type': 'text/html'}
-        return make_response(render_template('madelyn/SYRinfo.html', match=match_info['user'], attendee=attendee, user=user, event=e, other_setter_upper = match_info['setter_upper'], member = match_info['member']), 200, headers)
+
+        if not match_info:
+            return make_response(render_template('no_new_matches.html'))
+
+        if os.path.isfile('./static/' + session['username']):
+            pic = './static/' + session['username']
+        else:
+            pic = '/static/default-pro-pic.png'
+
+        if os.path.isfile('./static/' + match_info['user'].netid):
+            match_pic = './static/' + match_info['user'].netid
+        else:
+            match_pic = '/static/default-pro-pic.png'
+        
+
+        return make_response(render_template('madelyn/SYRinfo.html', pic=pic, match_pic = match_pic, match=match_info['user'], attendee=attendee, user=user, event=e, other_setter_upper = match_info['setter_upper'], member = match_info['member']), 200, headers)
 
     def post(self):
         parser = reqparse.RequestParser()
@@ -649,8 +659,13 @@ class index(Resource):
 
                     my_event_matches[match.event].append(match)
 
+                if os.path.isfile('./static/' + session['username']):
+                    pic = './static/' + session['username']
+                else:
+                    pic = '/static/default-pro-pic.png'
+
                 headers = {'Content-Type': 'text/html'}
-                return make_response(render_template('madelyn/init.html', username=session['username'], name=name, events=events, friends=friends, friend_event_matches = friend_event_matches, my_event_matches=my_event_matches, user=user),200,headers)
+                return make_response(render_template('madelyn/init.html', pic = pic, name=name, events=events, friends=friends, friend_event_matches = friend_event_matches, my_event_matches=my_event_matches, user=user),200,headers)
             else:
                 return redirect(url_for('login'))
         
@@ -910,13 +925,10 @@ def upload_picture():
     if 'file' in request.files:
         file = request.files['file']
         if file.filename != '':
-            print file.filename
             if file and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], 'test'))
-    else:
-        print 'not in files'
-    return 'success'
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], session['username']))
+    return redirect(url_for('index'))
 
 api.add_resource(signup, '/signup')
 api.add_resource(login, '/login')

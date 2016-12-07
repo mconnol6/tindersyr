@@ -31,7 +31,7 @@
                 <button class="btn btn-default" type="submit">Logout</button>
             </form>
 			<ul class="nav navbar-nav navbar-right">
-                <li><a href="#profilePicModal" data-dismiss="modal" data-toggle="modal" data-target="#profilePicModal"><img height=20px width=20px src="/static/default-pro-pic.png" style="border-radius: 50%;"></a></li>
+                <li><a href="#profilePicModal" data-dismiss="modal" data-toggle="modal" data-target="#profilePicModal"><img height=20px width=20px src="{{pic}}" style="border-radius: 50%;"></a></li>
                 <!--<li id="proPicEdit"><a href="#"><img height=20px width=20px src="/static/{{username}}" style="border-radius: 50%;"></a></li>
 -->
                 <li><a href="#">Hi, <span id="userName">{{ name }}</span>!</a></li> 
@@ -53,8 +53,7 @@
                                     <label class="control-label" for="proPic">Upload Profile Pic:</label>
                                     <input type="file" name="file" id="proPic" multiple>
 					<br>
-                                    <button type="button" id="upload_button" class="btn btn-info">Upload!</button>
-                                    <button type="submit" class="btn btn-success">Submit</button>
+                                    <button type="submit" class="btn btn-success">Upload</button>
                                 </form>
                             </div>
                             <div class="modal-footer">
