@@ -25,8 +25,11 @@ function sendEmail(email) {
     data: email,
     type: 'POST',
     success: function(response) {
-      window.location.replace('/index');
-      console.log("rawr");
+        if (response == 'yes') {
+            window.location.replace('/index')
+        } else {
+            window.location.replace('/signup_form')
+        }
     },
     error: function(error) {
       console.log(error);

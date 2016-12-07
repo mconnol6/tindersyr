@@ -8,131 +8,110 @@
 		<title>tiNDer - the SYR edition</title>
 	</head>
     <body>
+    <form method="post" action="{{ url_for('signup') }}">
 
 	<div style="margin: 50px;">
+        <div>
+            <label class="control-label" for="name">Name:</label>
+            <input class="form-control" name="name" id="name" type="text">
+            <br>
+            <div class="form-group">
+                <label for="dorm">Dorm (must be ND):</label>
+                <select class="form-control" name="dorm" id="dorm">
+                    <option selected="selected">Alumni</option>
+                    <option>Badin</option>
+                    <option>BP</option>
+                    <option>Carroll</option>
+                    <option>Cav</option>
+                    <option>Dillon</option>
+                    <option>Duncan</option>
+                    <option>Dunne</option>
+                    <option>Farley</option>
+                    <option>Fisher</option>
+                    <option>Flaherty</option>
+                    <option>Howard</option>
+                    <option>Keenan</option>
+                    <option>Keough</option>
+                    <option>Knott</option>
+                    <option>Lewis</option>
+                    <option>Lyons</option>
+                    <option>McGlinn</option>
+                    <option>Morrissey</option>
+                    <option>Old College</option>
+                    <option>O'Neill</option>
+                    <option>Pangborn</option>
+                    <option>Pasquerilla East</option>
+                    <option>PDub</option>
+                    <option>Ryan</option>
+                    <option>Sted's</option>
+                    <option>Siegfried</option>
+                    <option>Sorin</option>
+                    <option>Walsh</option>
+                    <option>Welsh Fam</option>
+                    <option>Zahm</option>
+                </select>
+            </div>
+        </div>
 
-            <!-- <form method="post" action="{{ url_for('signup')}}" > -->
-                <!-- Sign Up Modal 1 -->
-                            <div>
-                                <label class="control-label" for="name">Name:</label>
-                                <input class="form-control" name="name" id="name_first" type="text">
-                                <br>
-                                <label class="control-label" for="netid">NetID:</label>
-                                <input class="form-control" name="netid" id="netid_first" type="text">
-                                <br>
-                                <label class="control-label" for="passwordInput">Password:</label>
-                                <input class="form-control" id="passwordInput" type="password">
-                                <br>
-                                <div class="form-group">
-                                    <label for="dorm">Dorm (must be ND):</label>
-                                    <select class="form-control" name="dorm" id="dorm_first">
-                                        <option selected="selected">Alumni</option>
-                                        <option>Badin</option>
-                                        <option>BP</option>
-                                        <option>Carroll</option>
-                                        <option>Cav</option>
-                                        <option>Dillon</option>
-                                        <option>Duncan</option>
-                                        <option>Dunne</option>
-                                        <option>Farley</option>
-                                        <option>Fisher</option>
-                                        <option>Flaherty</option>
-                                        <option>Howard</option>
-                                        <option>Keenan</option>
-                                        <option>Keough</option>
-                                        <option>Knott</option>
-                                        <option>Lewis</option>
-                                        <option>Lyons</option>
-                                        <option>McGlinn</option>
-                                        <option>Morrissey</option>
-                                        <option>Old College</option>
-                                        <option>O'Neill</option>
-                                        <option>Pangborn</option>
-                                        <option>Pasquerilla East</option>
-                                        <option>PDub</option>
-                                        <option>Ryan</option>
-                                        <option>Sted's</option>
-                                        <option>Siegfried</option>
-                                        <option>Sorin</option>
-                                        <option>Walsh</option>
-                                        <option>Welsh Fam</option>
-                                        <option>Zahm</option>
-                                    </select>
-                                </div>
-                            </div>
-
-
-                <!-- Sign Up Modal 2 -->
-                                <div>
-                                    <label class="control-label" for="bio_first">Bio:</label>
-                                    <input class="form-control" name="bio_first" id="bio_first" type="text">
-                                    <br>
-                                    <label class="control-label" for="hometown_first">Hometown:</label>
-                                    <input class="form-control" name="hometown_first" id="hometown_first" type="text">
-                                    <br>
-                                    <div class="form-group" style="width: 45%; float: left;">
-                                        <label for="gender_first">Gender:</label>
-                                        <select class="form-control" name="gender_first" id="gender_first">
-                                            <option>Male</option>
-                                            <option>Female</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group" style="width: 45%; float: right;">
-                                        <label for="interested_in_first">Interested in:</label>
-                                        <select class="form-control" name="interested_in_first" id="interested_in_first">
-                                            <option>Male</option>
-                                            <option>Female</option>
-                                            <option>Both</option>
-                                        </select>
-                                    </div>
-					<br>
-					<br>
-					<br>
-					<br>
-                                    <label class="control-label" for="major_first">Major(s):</label>
-                                    <input class="form-control" name="major_first" type="text" id="major_first">
-                                    <br>
-                                    <div class="form-group">
-                                        <label for="year">Graduation Year:<label>
-                                        <select class="form-control" name="year_first" id="year_first">
-                                            <option>2017</option>
-                                            <option>2018</option>
-                                            <option>2019</option>
-                                            <option>2020</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                <!-- Sign Up Modal 3: Interests -->
-                        <form method="post" action="{{ url_for('signup') }}">
-                                <input type="hidden" name="name" id="name"/>
-                                <input type="hidden" name="netid" id="netid"/>
-                                <input type="hidden" name="dorm" id="dorm"/>
-                                <input type="hidden" name="year" id="year"/>
-                                <input type="hidden" name="bio" id="bio"/>
-                                <input type="hidden" name="hometown" id="hometown"/>
-                                <input type="hidden" name="gender" id="gender"/>
-                                <input type="hidden" name="interested_in" id="interested_in"/>
-                                <input type="hidden" name="major" id="major"/>
-                                <p id="interestList"></p>
-                                <br>
-                                <label class="control-label" for="interests">Select your interests:</label>
+            <div>
+                <label class="control-label" for="bio">Bio:</label>
+                <input class="form-control" name="bio" id="bio" type="text">
+                <br>
+                <label class="control-label" for="hometown">Hometown:</label>
+                <input class="form-control" name="hometown" id="hometown" type="text">
+                <br>
+                <div class="form-group" style="width: 45%; float: left;">
+                    <label for="gender">Gender:</label>
+                    <select class="form-control" name="gender" id="gender">
+                        <option>Male</option>
+                        <option>Female</option>
+                    </select>
+                </div>
+                <div class="form-group" style="width: 45%; float: right;">
+                    <label for="interested_in">Interested in:</label>
+                    <select class="form-control" name="interested_in" id="interested_in">
+                        <option>Male</option>
+                        <option>Female</option>
+                        <option>Both</option>
+                    </select>
+                </div>
 <br>
-                                <div id="interests">
-                                    {% for i in interests %}
-                                        <label><input name="interest" type="checkbox" id="{{i}}" value="{{i}}">{{i}}</input></label>
-                                        <br/>
-                                    {% endfor %}
-                                </div>
-                                <br>
-                                <br>
-                                <br>
-                                <br>
+<br>
+<br>
+<br>
+                <label class="control-label" for="major">Major(s):</label>
+                <input class="form-control" name="major" type="text" id="major">
+                <br>
+                <div class="form-group">
+                    <label for="year">Graduation Year:<label>
+                    <select class="form-control" name="year" id="year">
+                        <option>2017</option>
+                        <option>2018</option>
+                        <option>2019</option>
+                        <option>2020</option>
+                    </select>
+                </div>
+            </div>
 
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                <input type="submit" value="Submit" class="btn btn-primary">
-                        </form>
+    <!-- Sign Up Modal 3: Interests -->
+                    <p id="interestList"></p>
+                    <br>
+                    <label class="control-label" for="interests">Select your interests:</label>
+<br>
+                    <div id="interests">
+                        {% for i in interests %}
+                            <label><input name="interest" type="checkbox" id="{{i}}" value="{{i}}">{{i}}</input></label>
+                            <br/>
+                        {% endfor %}
+                    </div>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
 
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <input type="submit" value="Submit" class="btn btn-primary">
 		</div>
+    </form>
 	</body>
 </html>
