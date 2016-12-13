@@ -609,12 +609,21 @@ class add_friend(Resource):
 
             if user == False:
                 flash('This user does not exist.')
-            else:
-                insert_stmt = "INSERT INTO friends VALUES ( %(netid)s, %(friend)s);"
-                cursor.execute(insert_stmt, { 'netid': session['username'], 'friend': args['friend'] })
+                return redirect(url_for('index'))
 
-                conn.commit()
-                conn.close()
+            #check that the friendship does not already exit
+            cursor.execute("SELECT count(*) FROM friends WHERE netid='{}' and friend='{}'".format(session['username'], args['friend']))
+            data = cursor.fetchall()
+
+            if (data[0][0] != 0):
+                flash('You are already friends with this user!')
+                return redirect(url_for('index'))
+
+            insert_stmt = "INSERT INTO friends VALUES ( %(netid)s, %(friend)s);"
+            cursor.execute(insert_stmt, { 'netid': session['username'], 'friend': args['friend'] })
+
+            conn.commit()
+            conn.close()
             return redirect(url_for('index'))
 
         except Exception as e:
