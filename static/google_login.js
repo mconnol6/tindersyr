@@ -9,14 +9,21 @@ function signOut() {
 
 function onSignIn(googleUser) {
   var profile = googleUser.getBasicProfile();
-  console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-  console.log('Name: ' + profile.getName());
-  console.log('Image URL: ' + profile.getImageUrl());
-  console.log('Email: ' + profile.getEmail());
+  //console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+  //console.log('Name: ' + profile.getName());
+  //console.log('Image URL: ' + profile.getImageUrl());
+  //console.log('Email: ' + profile.getEmail());
+
+  var email_list = profile.getEmail().split("@");
+  
+  if (email_list[1] != 'nd.edu') {
+      $('#error').html('Log out of this Google account and sign in with an nd.edu address.');
+      return;
+  }
 
   // The ID token you need to pass to your backend:
   sendEmail(profile.getEmail());
-  console.log("Finished");
+  //console.log("Finished");
 }
 
 function sendEmail(email) {

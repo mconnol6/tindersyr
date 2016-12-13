@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, make_response, redirect, url_for, session
+from flask import Flask, request, render_template, make_response, redirect, url_for, session, flash
 from flask_restful import Resource, Api, reqparse
 from flask.ext.mysql import MySQL
 from oauth2client import client
@@ -214,6 +214,9 @@ def get_user_info(netid):
     cursor.callproc('GetUser', (netid,))
     data = cursor.fetchall()
 
+    if len(data) == 0:
+        return False
+
     user = data[0]
     name = ""
     year = ""
@@ -427,6 +430,7 @@ class start_swiping(Resource):
             return redirect(url_for('login'))
 
         if 'attendee_netid' not in session or 'event' not in session:
+            flash('Select a friend and an event!');
             return redirect(url_for('index'))
 
         attendee_netid = session['attendee_netid']
@@ -460,7 +464,6 @@ class start_swiping(Resource):
 
         interests = get_interests(match_info['user'].netid)
         
-
         return make_response(render_template('madelyn/SYRinfo.html', interests=interests, pic=pic, match_pic = match_pic, match=match_info['user'], attendee=attendee, user=user, event=e, other_setter_upper = match_info['setter_upper'], member = match_info['member']), 200, headers)
 
     def post(self):
@@ -600,11 +603,18 @@ class add_friend(Resource):
 
             conn = mysql.connect()
             cursor = conn.cursor()
-            insert_stmt = "INSERT INTO friends VALUES ( %(netid)s, %(friend)s);"
-            cursor.execute(insert_stmt, { 'netid': session['username'], 'friend': args['friend'] })
 
-            conn.commit()
-            conn.close()
+            #check that the user exists
+            user = get_user_info(args['friend'])
+
+            if user == False:
+                flash('This user does not exist.')
+            else:
+                insert_stmt = "INSERT INTO friends VALUES ( %(netid)s, %(friend)s);"
+                cursor.execute(insert_stmt, { 'netid': session['username'], 'friend': args['friend'] })
+
+                conn.commit()
+                conn.close()
             return redirect(url_for('index'))
 
         except Exception as e:
@@ -722,7 +732,10 @@ class login(Resource):
         try:
 	    for key in request.form:
 	        email = key
-            netid = email.split('@')[0]
+            email_list = email.split('@')
+
+            netid = email_list[0]
+
 
             #parser = reqparse.RequestParser()
             #parser.add_argument('netid', type=str)
@@ -738,12 +751,10 @@ class login(Resource):
             conn.close()
 
             if len(data) != 0:
-                print 'user found'
                 session['username'] = netid
                 return 'yes'
 
             else:
-                print 'user not found'
                 session['potential_username'] = netid
                 return 'no'
 

@@ -108,7 +108,7 @@
 		
 
 
-		<!-- Add Friend Modal -->
+        <!--
 		<div id="addFriendModal" class="modal fade" role="dialog">
 			<div class="modal-dialog">
 				<div class="modal-content">
@@ -203,12 +203,7 @@
 				</div>
 			</div>
 		</div>
-
-
-
-
-
-
+        -->
 
 		<!-- Edit Profile Modal -->
 		<div id="editProfileModal" class="modal fade" role="dialog">
@@ -302,7 +297,13 @@
 			</div>
 		</div>
 
-
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <h5 style="color:red;">{{ message }}</h5>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
 
 
 		<div id="choices" style="margin: 0px; padding: 0px;">
@@ -336,7 +337,7 @@
                                         <tr id="addFriend">
                                             <td style="width: 100%;">
                                                 <button type="button" class="btn btn-success" data-dismiss="modal" data-toggle="modal" data-target="#findFriendModal">Find Friend</button>
-                                                <button type="button" class="btn btn-warning" data-dismiss="modal" data-toggle="modal" data-target="#addFriendModal">Add Friend</button>
+<!--                                                <button type="button" class="btn btn-warning" data-dismiss="modal" data-toggle="modal" data-target="#addFriendModal">Add Friend</button> -->
                                             </td>
                                         </tr>
 

@@ -65,9 +65,17 @@
 
 				</div>
 			</div>
-
-
+            
 			<center>	
+            <h5 style="color:red;" id='error'></h5>
+        
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <h5 style="color:red;">{{ message }}</h5>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
 
                                 <div class="g-signin2" data-onsuccess="onSignIn"></div>
 
