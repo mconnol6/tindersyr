@@ -18,37 +18,9 @@
             <div class="form-group">
                 <label for="dorm">Dorm (must be ND):</label>
                 <select class="form-control" name="dorm" id="dorm">
-                    <option selected="selected">Alumni</option>
-                    <option>Badin</option>
-                    <option>BP</option>
-                    <option>Carroll</option>
-                    <option>Cav</option>
-                    <option>Dillon</option>
-                    <option>Duncan</option>
-                    <option>Dunne</option>
-                    <option>Farley</option>
-                    <option>Fisher</option>
-                    <option>Flaherty</option>
-                    <option>Howard</option>
-                    <option>Keenan</option>
-                    <option>Keough</option>
-                    <option>Knott</option>
-                    <option>Lewis</option>
-                    <option>Lyons</option>
-                    <option>McGlinn</option>
-                    <option>Morrissey</option>
-                    <option>Old College</option>
-                    <option>O'Neill</option>
-                    <option>Pangborn</option>
-                    <option>Pasquerilla East</option>
-                    <option>PDub</option>
-                    <option>Ryan</option>
-                    <option>Sted's</option>
-                    <option>Siegfried</option>
-                    <option>Sorin</option>
-                    <option>Walsh</option>
-                    <option>Welsh Fam</option>
-                    <option>Zahm</option>
+                    {% for d in dorms %}
+                        <option>{{d}}</option>
+                    {% endfor %}
                 </select>
             </div>
         </div>
@@ -109,7 +81,6 @@
                     <br>
                     <br>
 
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                     <input type="submit" value="Submit" class="btn btn-primary">
 		</div>
     </form>

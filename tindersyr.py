@@ -81,6 +81,21 @@ def get_all_interests():
 
     return interests
 
+def get_all_dorms():
+    conn = mysql.connect()
+    cursor = conn.cursor()
+
+    cursor.execute('select name from dorm;')
+
+    data = cursor.fetchall()
+
+    dorms = []
+
+    for d in data:
+        dorms.append(d[0])
+
+    return dorms
+
 def get_match(setter_upper, attendee, event):
     conn = mysql.connect()
     cursor = conn.cursor()
@@ -675,7 +690,6 @@ class index(Resource):
             session.pop('attendee_netid', None)
             session.pop('event', None)
 
-
             conn = mysql.connect()
             cursor = conn.cursor()
             cursor.execute("SELECT name from users where netid='{}';".format(session['username']))
@@ -721,8 +735,10 @@ class index(Resource):
                 else:
                     pic = '/static/default-pro-pic.png'
 
+                dorms = get_all_dorms()
+
                 headers = {'Content-Type': 'text/html'}
-                return make_response(render_template('madelyn/init.html', pic = pic, name=name, events=events, friends=friends, friend_event_matches = friend_event_matches, my_event_matches=my_event_matches, user=user),200,headers)
+                return make_response(render_template('madelyn/init.html', dorms=dorms,pic = pic, name=name, events=events, friends=friends, friend_event_matches = friend_event_matches, my_event_matches=my_event_matches, user=user),200,headers)
             else:
                 return redirect(url_for('login'))
         
@@ -997,11 +1013,14 @@ def upload_picture():
 
 @app.route('/signup_form', methods=['GET'])
 def signup_form():
+    if 'potential_username' not in session or 'username' in session:
+        return redirect(url_for('index'))
     interests = get_all_interests()
+    dorms = get_all_dorms()
     headers = {'Content-Type': 'text/html'}
-    return make_response(render_template('madelyn/signup.html', interests=interests))
+    return make_response(render_template('madelyn/signup.html', interests=interests, dorms=dorms))
 
-@app.route('/signup', methods=['GET', 'POST'])
+@app.route('/signup', methods=['POST'])
 def signup():
     if request.method == 'POST':
         if 'potential_username' not in session:
@@ -1032,6 +1051,7 @@ def signup():
         conn.commit()
         conn.close()
         session['username'] = n_netid
+        session.pop('potential_username')
 
         return redirect(url_for('index'))
 

@@ -20,7 +20,7 @@
 		<nav class="navbar navbar-default">
 		<div class="container-fluid">
 			<div class="navbar-header">
-				<a class="navbar-brand" href="index.html">tiNDer</a>
+                <a class="navbar-brand" href="{{url_for('index')}}">tiNDer</a>
 			</div>
 			<ul class="nav navbar-nav">
 				<li><a href="#myMatches">my matches</a></li>
@@ -138,37 +138,9 @@
                             <div class="form-group">
                                 <label for="friendDorm">Dorm (must be ND):</label>
                                 <select class="form-control" id="friendDorm" name="dorm">
-                                    <option selected="selected">Alumni</option>
-                                    <option>Badin</option>
-                                    <option>Breen-Phillips</option>
-                                    <option>Carroll</option>
-                                    <option>Cavanaugh</option>
-                                    <option>Dillon</option>
-                                    <option>Duncan</option>
-                                    <option>Dunne</option>
-                                    <option>Farley</option>
-                                    <option>Fisher</option>
-                                    <option>Flaherty</option>
-                                    <option>Howard</option>
-                                    <option>Keenan</option>
-                                    <option>Keough</option>
-                                    <option>Knott</option>
-                                    <option>Lewis</option>
-                                    <option>Lyons</option>
-                                    <option>McGlinn</option>
-                                    <option>Morrissey</option>
-                                    <option>Old College</option>
-                                    <option>O'Neill</option>
-                                    <option>Pangborn</option>
-                                    <option>Pasquerilla East</option>
-                                    <option>Pasquerilla West</option>
-                                    <option>Ryan</option>
-                                    <option>St. Edward's</option>
-                                    <option>Siegfried</option>
-                                    <option>Sorin</option>
-                                    <option>Walsh</option>
-                                    <option>Welsh Family</option>
-                                    <option>Zahm</option>
+                                {% for d in dorms %}
+
+                                {% endfor %}
                                 </select>
                             </div>
                             <div class="form-group">
@@ -232,37 +204,9 @@
                             <div class="form-group">
                                 <label for="sel1">Dorm (must be ND):</label>
                                 <select id="editDorm" class="form-control" name="dorm" id="sel1" value="{{user.dorm}}">
-                                    <option>Alumni</option>
-                                    <option>Badin</option>
-                                    <option>BP</option>
-                                    <option>Carroll</option>
-                                    <option>Cav</option>
-                                    <option>Dillon</option>
-                                    <option>Duncan</option>
-                                    <option>Dunne</option>
-                                    <option>Farley</option>
-                                    <option>Fisher</option>
-                                    <option>Flaherty</option>
-                                    <option>Howard</option>
-                                    <option>Keenan</option>
-                                    <option>Keough</option>
-                                    <option>Knott</option>
-                                    <option>Lewis</option>
-                                    <option>Lyons</option>
-                                    <option>McGlinn</option>
-                                    <option>Morrissey</option>
-                                    <option>Old College</option>
-                                    <option>O'Neill</option>
-                                    <option>Pangborn</option>
-                                    <option>Pasquerilla East</option>
-                                    <option>PDub</option>
-                                    <option>Ryan</option>
-                                    <option>Sted's</option>
-                                    <option>Siegfried</option>
-                                    <option>Sorin</option>
-                                    <option>Walsh</option>
-                                    <option>Welsh Fam</option>
-                                    <option>Zahm</option>
+                                {% for d in dorms %}
+                                    <option>{{d}}</option>
+                                {% endfor %}
                                 </select>
                             </div>
                             <div class="form-group">
@@ -272,6 +216,7 @@
                                     <option>2018</option>
                                     <option>2019</option>
                                     <option>2020</option>
+                                    <option>2021</option>
                                 </select>
                             </div>
                             <div class="form-group">
