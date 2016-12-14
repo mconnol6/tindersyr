@@ -67,6 +67,10 @@ ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
 mysql.init_app(app)
 
+def delete_picture(netid):
+    if os.path.isfile('./static/' + netid):
+        os.remove('./static/' + netid)
+
 def get_all_interests():
     conn = mysql.connect()
     cursor = conn.cursor()
@@ -794,6 +798,7 @@ class delete_account(Resource):
         data = cursor.fetchall()
         conn.commit()
         conn.close()
+        delete_picture(session['username'])
         session.pop('username', None)
         return redirect(url_for('login'))
 
@@ -1008,6 +1013,7 @@ def upload_picture():
         if file.filename != '':
             if file and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
+                delete_picture(session['username'])
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], session['username']))
     return redirect(url_for('index'))
 
